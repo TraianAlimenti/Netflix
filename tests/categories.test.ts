@@ -1,34 +1,41 @@
-const  fetch = require("fetch");
+const fetch = require("node-fetch");
+const spawn = require('child_process').spawn;
 
-describe("Human jest", () => {
-     
- 
-  it("Human should have a name", () => {
-    console.log("I'm alive")
+
+//MUST FIND A WAY TO KILL THIS child_process
+spawn("json-server", [
+  "--watch",
+  "./netflixdb.json",
+  "--port",
+  "3000",
+]);
+
+describe("Netflix jest", () => {
+  
+  var url = "http://localhost:3000";
+
+  it.only("get categories", async () => {
+    const response = await fetch(url + "/categories");
+    const data = await response.json();
+
+    expect(Array.isArray(data)).toEqual(true);
+    expect(response.status).toBe(200);
+    expect(data.length).toBe(4);
   });
 
-  it("get categories", () => {
-    
-    fetch("http://localhost:3000/categories").then(response => response.json())
-    .then(data => console.log(data));
-    console.log(fetch)
-  })
+  it.only("get single categories", async () => {
+    const response = await fetch(url + "/categories/1");
+    const data = await response.json();
 
-  it.todo("get single categories")
+    expect(response.status).toBe(200);
+    expect(data.id).toBe(1);
+  });
 
-  it.todo("patch categories")
+  it.todo("patch categories");
 
-  it.todo("delete categories")
+  it.todo("delete categories");
 
-  it.todo("create categories")
+  it.todo("create categories");
 
-  // it("should return 2 for Human Legs", () => {
-  //   expect(instance.getLegs()).toBe(2);
-  // });
-
-  // it.todo("Algo que tengo que codear")
-
-  // it.skip("should return 4 for Human Legs", () => {
-  //   expect(instance.getLegs()).toBe(4);
-  // });
 });
+
