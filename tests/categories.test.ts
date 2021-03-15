@@ -5,7 +5,7 @@ describe("Resources test", () => {
   var url = "http://localhost:3000";
   var jsonServer
 
-  beforeEach( async () => {
+  beforeAll( async () => {
     //MUST FIND A WAY TO KILL THIS child_process
     jsonServer = await spawn("json-server", [
       "--watch",
@@ -65,7 +65,7 @@ describe("Resources test", () => {
     expect(response.status).toBe(200);
   });
 
-  afterEach( async () => {
+  afterAll( async () => {
     //this is working but should resolve how to wait until db is up
     //jsonServer.kill()
   });
