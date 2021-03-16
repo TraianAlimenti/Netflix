@@ -1,7 +1,7 @@
 {
   "name": "netflix",
   "version": "1.0.0",
-  "description": "",
+  "description": "Personal project implementing Netflix with nodeJs",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -11,9 +11,22 @@
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "fetch": "^1.1.0",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "json-server": "^0.16.3"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/traian.alimentibel/netflix.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://gitlab.com/traian.alimentibel/netflix/issues"
+  },
+  "homepage": "https://gitlab.com/traian.alimentibel/netflix#readme"
 }
