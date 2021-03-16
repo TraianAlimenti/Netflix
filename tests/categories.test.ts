@@ -1,22 +1,21 @@
 const fetch = require("node-fetch");
 const jsonServer = require("json-server");
 //const fs = require("fs");
-var fs = require('fs');
-
+const fs = require("fs");
 
 describe("Resources test", () => {
   const url = "http://localhost:3000";
-  const testDataBase = 'netflixdb-test.json';
-  var app
-  var router
-  var middlewares
-  var server
+  const testDataBase = "netflixdb-test.json";
+  var app;
+  var router;
+  var middlewares;
+  var server;
 
-  beforeEach(() => {  
-     fs.copyFile('sample.json', testDataBase, (err) => {
-       if (err) throw err;
-       console.log('dataBase copied');
-     });
+  beforeEach(() => {
+    fs.copyFile("sample.json", testDataBase, (err) => {
+      if (err) throw err;
+      console.log("dataBase copied");
+    });
 
     router = jsonServer.router(testDataBase);
     middlewares = jsonServer.defaults();
@@ -24,7 +23,7 @@ describe("Resources test", () => {
     app.use(middlewares);
     app.use(router);
     server = app.listen(3000, () => {
-      console.log("JSON Server is running");
+      console.log("JSON Server is up");
     });
   });
 
@@ -68,19 +67,24 @@ describe("Resources test", () => {
   it("delete categories", async () => {
     const response = await fetch(url + "/categories/3", {
       method: "DELETE",
-      headers: { "Content-type": "application/json; charset=UTF-8" }
+      headers: { "Content-type": "application/json; charset=UTF-8" },
     });
 
     expect(response.status).toBe(200);
   });
 
   afterEach(() => {
-    server.close();
+    try {
+      server.close();
+      console.log("JSON Server is down");
+    } catch (err) {
+      console.error(err);
+    }
 
-      try {
-        fs.unlinkSync(testDataBase)
-      } catch(err) {
-        console.error(err)
-      }
+    try {
+      fs.unlinkSync(testDataBase);
+    } catch (err) {
+      console.error(err);
+    }
   });
 });
