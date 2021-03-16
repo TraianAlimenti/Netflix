@@ -1,40 +1,39 @@
 const fetch = require("node-fetch");
-const spawn = require("child_process").spawn;
+const jsonServer = require("json-server");
 
 describe("Resources test", () => {
-  var url = "http://localhost:3000";
-  var jsonServer
+  const url = "http://localhost:3000";
+  const testDataBase = "netflixdb-test.json";
+  const server = jsonServer.create();
+  const router = jsonServer.router(testDataBase);
+  const middlewares = jsonServer.defaults();
 
-  beforeAll( async () => {
-    //MUST FIND A WAY TO KILL THIS child_process
-    jsonServer = await spawn("json-server", [
-      "--watch",
-      "netflixdb.json",
-      "--port",
-      "3000",
-    ]);
+  beforeEach(() => {
+    server.use(middlewares);
+    server.use(router);
+    server.listen(3000, () => {
+      console.log("JSON Server is running");
+    });
   });
 
-  it.only("get categories", async () => {
+  it("get categories", async () => {
     const response = await fetch(url + "/categories");
     const data = await response.json();
 
     expect(Array.isArray(data)).toEqual(true);
     expect(response.status).toBe(200);
     expect(data.length).toBe(3);
-    //console.log("Test passed - List of categories retrieved");
   });
 
-  it.skip("get single categories", async () => {
+  it("get single categories", async () => {
     const response = await fetch(url + "/categories/1");
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.id).toBe(1);
-    //console.log("Test passed - single categorie retrieved");
   });
 
-  it.skip("create categories", async () => {
+  it("create categories", async () => {
     const response = await fetch(url + "/categories/", {
       method: "POST",
       headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -44,7 +43,7 @@ describe("Resources test", () => {
     expect(response.status).toBe(201);
   });
 
-  it.skip("patch categories", async () => {
+  it("patch categories", async () => {
     const response = await fetch(url + "/categories/4", {
       method: "PATCH",
       headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -52,21 +51,19 @@ describe("Resources test", () => {
     });
     const data = await response.json();
     expect(response.status).toBe(200);
-    //console.log("Test passed - Patch of categorie succesfuly done");
   });
 
-  it.skip("delete categories", async () => {
+  it("delete categories", async () => {
     const response = await fetch(url + "/categories/4", {
       method: "DELETE",
       headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: '{"name": "miniseriesss"}',
+      body: '{"name": "miniseries"}',
     });
 
     expect(response.status).toBe(200);
   });
 
-  afterAll( async () => {
-    //this is working but should resolve how to wait until db is up
-    //jsonServer.kill()
+  afterEach(() => {
+    server.listen().close();
   });
 });
