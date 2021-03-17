@@ -6,10 +6,10 @@ const fs = require("fs");
 describe("Resources test", () => {
   const url = "http://localhost:3000";
   const testDataBase = "netflixdb-test.json";
-  var app;
-  var router;
-  var middlewares;
-  var server;
+  let app;
+  let router;
+  let middlewares;
+  let server;
 
   beforeEach(() => {
     fs.copyFile("sample.json", testDataBase, (err) => {
