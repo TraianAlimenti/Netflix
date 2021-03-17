@@ -26,7 +26,7 @@ describe("Resources test", () => {
 
     expect(Array.isArray(data)).toEqual(true);
     expect(response.status).toBe(200);
-    //expect(data.length).toBe(3);
+    expect(data.length).toBe(3);
   });
 
   it("get single categories", async () => {
