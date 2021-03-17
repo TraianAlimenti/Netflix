@@ -2,19 +2,17 @@ import * as jsonServer from "json-server";
 import fetch from "node-fetch";
 import { copyFileSync, unlinkSync } from "fs";
 
+let server: Express.Application;
+
 describe("Resources test", () => {
   const url = "http://localhost:3000";
   const testDataBase = "netflixdb-test.json";
   let router;
   let middlewares;
-  let server: Express.Application;
 
   beforeEach(() => {
-    copyFileSync("sample.json", testDataBase, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log("dataBase copied");
+    copyFileSync("sample.json", testDataBase); // if this has an error, it will throw automatically
+    console.log("dataBase copied");
     });
 
     router = jsonServer.router(testDataBase);
