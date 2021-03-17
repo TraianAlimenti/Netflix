@@ -44,7 +44,7 @@ describe("Resources test", () => {
     const response = await fetch(TARGET_URL + "/categories/", {
       method: "POST",
       headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: '{"id": 4,"name": "miniserie"}',
+      body: JSON.stringify({"id": 4,"name": "miniserie"}),
     });
 
     expect(response.status).toBe(201);
@@ -54,7 +54,7 @@ describe("Resources test", () => {
     const response = await fetch(TARGET_URL + "/categories/3", {
       method: "PATCH",
       headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: '{"name": "films"}',
+      body: JSON.stringify({"name": "films"}),
     });
     const data = await response.json();
     expect(response.status).toBe(200);
