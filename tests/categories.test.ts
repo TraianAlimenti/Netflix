@@ -1,6 +1,6 @@
 import * as jsonServer from "json-server";
 import fetch from "node-fetch";
-import { copyFile, unlinkSync } from "fs";
+import { copyFileSync, unlinkSync } from "fs";
 
 describe("Resources test", () => {
   const url = "http://localhost:3000";
@@ -10,7 +10,7 @@ describe("Resources test", () => {
   let server: Express.Application;
 
   beforeEach(() => {
-    copyFile("sample.json", testDataBase, (err) => {
+    copyFileSync("sample.json", testDataBase, (err) => {
       if (err) {
         throw err;
       }
