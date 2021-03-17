@@ -4,7 +4,7 @@ import { copyFileSync, unlinkSync } from "fs";
 
 let server: Express.Application;
 const testDatabaseFilename = "netflixdb-test.json";
-const url = "http://localhost:3000";
+const TARGET_URL = "http://localhost:3000";
 
 describe("Resources test", () => {
 
@@ -24,7 +24,7 @@ describe("Resources test", () => {
   });
 
   it("get categories", async () => {
-    const response = await fetch(url + "/categories");
+    const response = await fetch(TARGET_URL + "/categories");
     const data = await response.json();
 
     expect(Array.isArray(data)).toEqual(true);
@@ -33,7 +33,7 @@ describe("Resources test", () => {
   });
 
   it("get single categories", async () => {
-    const response = await fetch(url + "/categories/1");
+    const response = await fetch(TARGET_URL + "/categories/1");
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -41,7 +41,7 @@ describe("Resources test", () => {
   });
 
   it("create categories", async () => {
-    const response = await fetch(url + "/categories/", {
+    const response = await fetch(TARGET_URL + "/categories/", {
       method: "POST",
       headers: { "Content-type": "application/json; charset=UTF-8" },
       body: '{"id": 4,"name": "miniserie"}',
@@ -51,7 +51,7 @@ describe("Resources test", () => {
   });
 
   it("patch categories", async () => {
-    const response = await fetch(url + "/categories/3", {
+    const response = await fetch(TARGET_URL + "/categories/3", {
       method: "PATCH",
       headers: { "Content-type": "application/json; charset=UTF-8" },
       body: '{"name": "films"}',
@@ -61,7 +61,7 @@ describe("Resources test", () => {
   });
 
   it("delete categories", async () => {
-    const response = await fetch(url + "/categories/3", {
+    const response = await fetch(TARGET_URL + "/categories/3", {
       method: "DELETE",
       headers: { "Content-type": "application/json; charset=UTF-8" },
     });
