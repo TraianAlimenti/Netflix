@@ -1,16 +1,16 @@
 import * as jsonServer from "json-server";
-const fetch = require("node-fetch");
-const fs = require("fs");
+import fetch from "node-fetch";
+import { copyFile, unlinkSync } from "fs";
 
 describe("Resources test", () => {
   const url = "http://localhost:3000";
   const testDataBase = "netflixdb-test.json";
   let router;
   let middlewares;
-  let server;
+  let server: Express.Application;
 
   beforeEach(() => {
-    fs.copyFile("sample.json", testDataBase, (err) => {
+    copyFile("sample.json", testDataBase, (err) => {
       if (err) throw err;
       console.log("dataBase copied");
     });
@@ -80,7 +80,7 @@ describe("Resources test", () => {
     }
 
     try {
-      fs.unlinkSync(testDataBase);
+      unlinkSync(testDataBase);
     } catch (err) {
       console.error(err);
     }
