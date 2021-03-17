@@ -1,12 +1,10 @@
+import * as jsonServer from "json-server";
 const fetch = require("node-fetch");
-const jsonServer = require("json-server");
-//const fs = require("fs");
 const fs = require("fs");
 
 describe("Resources test", () => {
   const url = "http://localhost:3000";
   const testDataBase = "netflixdb-test.json";
-  let app;
   let router;
   let middlewares;
   let server;
@@ -19,7 +17,7 @@ describe("Resources test", () => {
 
     router = jsonServer.router(testDataBase);
     middlewares = jsonServer.defaults();
-    app = jsonServer.create();
+    const app = jsonServer.create();
     app.use(middlewares);
     app.use(router);
     server = app.listen(3000, () => {
