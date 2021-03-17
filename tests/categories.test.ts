@@ -11,7 +11,9 @@ describe("Resources test", () => {
 
   beforeEach(() => {
     copyFile("sample.json", testDataBase, (err) => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
       console.log("dataBase copied");
     });
 
