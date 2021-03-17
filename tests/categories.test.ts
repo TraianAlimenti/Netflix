@@ -4,9 +4,9 @@ import { copyFileSync, unlinkSync } from "fs";
 
 let server: Express.Application;
 const testDatabaseFilename = "netflixdb-test.json";
+const url = "http://localhost:3000";
 
 describe("Resources test", () => {
-  const url = "http://localhost:3000";
 
   beforeEach(() => {
     copyFileSync("sample.json", testDatabaseFilename); // if this has an error, it will throw automatically
