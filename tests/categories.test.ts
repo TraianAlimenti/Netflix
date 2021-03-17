@@ -9,6 +9,7 @@ const TARGET_URL = "http://localhost:3000";
 const MOCK_FILE = './tests/mock.json';
 
 describe("Resources test", () => {
+  const RESOURCE_PROPERTY_NAMES = ['id','name'];
 
   beforeEach(() => {
     copyFileSync(MOCK_FILE, testDatabaseFilename); // if this has an error, it will throw automatically
@@ -27,6 +28,7 @@ describe("Resources test", () => {
     expect(Array.isArray(data)).toEqual(true);
     expect(response.status).toBe(200);
     expect(data.length).toBe(3);
+    expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
   });
 
   it("get single categories", async () => {
@@ -34,6 +36,7 @@ describe("Resources test", () => {
     const data = await response.json();
 
     expect(response.status).toBe(200);
+    expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
     expect(data.id).toBe(1);
   });
 
@@ -55,6 +58,7 @@ describe("Resources test", () => {
     });
     const data = await response.json();
     expect(response.status).toBe(200);
+    expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
   });
 
   it("delete categories", async () => {
