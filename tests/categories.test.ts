@@ -1,15 +1,17 @@
-import * as jsonServer from "json-server";
+import jsonServer from "json-server";
 import fetch from "node-fetch";
+import Http from 'http'; // needed to extract the types.
 import { copyFileSync, unlinkSync } from "fs";
 
-let server: Express.Application;
-const testDatabaseFilename = "netflixdb-test.json";
+let server: Http.Server;
+const testDatabaseFilename = "./tests/netflixdb-test.json";
 const TARGET_URL = "http://localhost:3000";
+const MOCK_FILE = './tests/mock.json';
 
 describe("Resources test", () => {
 
   beforeEach(() => {
-    copyFileSync("sample.json", testDatabaseFilename); // if this has an error, it will throw automatically
+    copyFileSync(MOCK_FILE, testDatabaseFilename); // if this has an error, it will throw automatically
     console.log("dataBase copied");
     });
 
@@ -20,7 +22,7 @@ describe("Resources test", () => {
     app.use(router);
     server = app.listen(3000, () => {
       console.log("JSON Server is up");
-    });
+    }); // at this point, server is an http.Server: https://nodejs.org/api/http.html#http_class_http_server
   });
 
   it("get categories", async () => {
