@@ -13,7 +13,6 @@ describe("Resources test", () => {
   beforeEach(() => {
     copyFileSync(MOCK_FILE, testDatabaseFilename); // if this has an error, it will throw automatically
     console.log("dataBase copied");
-    });
 
     const router = jsonServer.router(testDatabaseFilename);
     const middlewares = jsonServer.defaults();
@@ -72,17 +71,9 @@ describe("Resources test", () => {
   });
 
   afterEach(() => {
-    try {
-      server.close();
-      console.log("JSON Server is down");
-    } catch (err) {
-      console.error(err);
-    }
-
-    try {
-      unlinkSync(testDatabaseFilename);
-    } catch (err) {
-      console.error(err);
-    }
+    server.close();
+    console.log("JSON Server is down");
+    unlinkSync(testDatabaseFilename);
   });
+
 });
