@@ -3,20 +3,18 @@ import fetch from "node-fetch";
 import { copyFileSync, unlinkSync } from "fs";
 
 let server: Express.Application;
+const testDataBase = "netflixdb-test.json";
 
 describe("Resources test", () => {
   const url = "http://localhost:3000";
-  const testDataBase = "netflixdb-test.json";
-  let router;
-  let middlewares;
 
   beforeEach(() => {
     copyFileSync("sample.json", testDataBase); // if this has an error, it will throw automatically
     console.log("dataBase copied");
     });
 
-    router = jsonServer.router(testDataBase);
-    middlewares = jsonServer.defaults();
+    const router = jsonServer.router(testDataBase);
+    const middlewares = jsonServer.defaults();
     const app = jsonServer.create();
     app.use(middlewares);
     app.use(router);
