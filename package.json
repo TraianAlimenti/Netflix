@@ -4,8 +4,8 @@
   "description": "Personal project implementing Netflix with nodeJs",
   "main": "index.js",
   "scripts": {
-    "start": "tsc index.ts && node index.js",
-    "test": "jest"
+    "start": "tsc && node index.js",
+    "test": "tsc && jest"
   },
   "author": "",
   "license": "ISC",
