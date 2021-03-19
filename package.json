@@ -4,7 +4,8 @@
   "description": "Personal project implementing Netflix with nodeJs",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "start": "tsc && node index.js",
+    "test": "tsc && jest"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "ts-jest": "^26.5.3"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "node-fetch": "^2.6.1"
   },
   "directories": {

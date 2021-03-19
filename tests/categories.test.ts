@@ -1,27 +1,22 @@
-import jsonServer from "json-server";
+import Http from 'http';
 import fetch from "node-fetch";
-import Http from 'http'; // needed to extract the types.
-import { copyFileSync, unlinkSync } from "fs";
+import { createServer } from '../server'
 
+const BASE_URL = `http://localhost`;
+let TARGET_URL = '';
 let server: Http.Server;
-const testDatabaseFilename = "./tests/netflixdb-test.json";
-const TARGET_URL = "http://localhost:3000";
-const MOCK_FILE = './tests/mock.json';
 
 describe("Resources test", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name'];
 
   beforeEach(() => {
-    copyFileSync(MOCK_FILE, testDatabaseFilename); // if this has an error, it will throw automatically
-    const router = jsonServer.router(testDatabaseFilename);
-    const middlewares = jsonServer.defaults();
-    const app = jsonServer.create();
-    app.use(middlewares);
-    app.use(router);
-    server = app.listen(3000); // at this point, server is an http.Server: https://nodejs.org/api/http.html#http_class_http_server
+    server = createServer();
+    // @ts-ignore Because the typescript typings for this are incorrect
+    const port = server?.address()?.port;
+    TARGET_URL = `${BASE_URL}:${port}`;
   });
 
-  it("get categories", async () => {
+  it.only("get categories", async () => {
     const response = await fetch(TARGET_URL + "/categories");
     const data = await response.json();
 
@@ -31,7 +26,7 @@ describe("Resources test", () => {
     expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
   });
 
-  it("get single categories", async () => {
+  it.only("get single categories", async () => {
     const response = await fetch(TARGET_URL + "/categories/1");
     const data = await response.json();
 
@@ -72,7 +67,6 @@ describe("Resources test", () => {
 
   afterEach(() => {
     server.close();
-    unlinkSync(testDatabaseFilename);
   });
 
 });
