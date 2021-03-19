@@ -1,3 +1,4 @@
 node_modules/
 netflixdb-tests.json
 index.js
+*.d.ts
