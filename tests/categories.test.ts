@@ -1,7 +1,6 @@
 import Http from 'http';
 import fetch from "node-fetch";
 import { createServer } from '../server'
-const fs = require("fs");
 
 const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
