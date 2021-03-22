@@ -106,7 +106,6 @@ app.get("/users", (_req: express.Request, res: express.Response) => {
 });
 
 app.get('/users/:id', (req: express.Request, res: express.Response) => {
-  
   let id = parseInt(req.params.id) -1
   res.send(mockData.users[id])
 
@@ -190,6 +189,53 @@ app.delete("/profiles/:id", (req: express.Request, res: express.Response) => {
   else {
     mockData.profiles.splice(id,1)
     inMemoryStore = Object.values(mockData.profiles);
+    res.json(inMemoryStore[id])
+  }
+});
+
+//Notifications request
+app.get("/notifications", (_req: express.Request, res: express.Response) => {
+  res.send(mockData.notifications);
+});
+
+app.get('/notifications/:id', (req: express.Request, res: express.Response) => {
+  
+  let id = parseInt(req.params.id) -1
+  res.send(mockData.notifications[id])
+
+});
+
+app.post("/notifications", (req: express.Request, res: express.Response) => { 
+  let inputJson = req.body;
+
+  inMemoryStore = Object.values(mockData.notifications);
+  let newId = inMemoryStore.length + 1
+
+  inputJson.id = newId
+  inMemoryStore.push(inputJson)
+  res.sendStatus(201)
+});
+
+app.patch("/notifications/:id", (req: express.Request, res: express.Response) => {
+  let inputJson = req.body;
+  let id = parseInt(req.params.id) -1
+
+  for(var key in inputJson)
+    mockData.notifications[id][key] = inputJson[key]
+
+  inMemoryStore = Object.values(mockData.notifications);
+
+  res.json(inMemoryStore[id])
+});
+
+app.delete("/notifications/:id", (req: express.Request, res: express.Response) => {
+  let id = parseInt(req.params.id) -1
+  
+  if (mockData.notifications[id] == null)
+    res.sendStatus(404)
+  else {
+    mockData.notifications.splice(id,1)
+    inMemoryStore = Object.values(mockData.notifications);
     res.json(inMemoryStore[id])
   }
 });
