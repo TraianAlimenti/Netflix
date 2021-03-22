@@ -65,7 +65,7 @@
         "name": "film"
       }
     ],
-    "user": [
+    "users": [
       {
         "id": 1,
         "name": "Traian",
