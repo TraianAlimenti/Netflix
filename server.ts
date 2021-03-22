@@ -7,6 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 let inMemoryStore = [];
 
+//Categories request
 app.get("/categories", (_req: express.Request, res: express.Response) => {
   res.send(mockData.categories);
 });
@@ -51,6 +52,8 @@ app.delete("/categories/:id", (req: any, res: any) => {
     res.json(inMemoryStore[id])
   }
 });
+
+//Titles request
 app.get("/titles", (_req: express.Request, res: express.Response) => {
   res.send(mockData.titles);
 });
@@ -62,7 +65,6 @@ app.get('/titles/:id', (req: express.Request, res: express.Response) => {
 
 });
 
-//TODO: isn't adding id if it's not specified in the body
 app.post("/titles", (req: express.Request, res: express.Response) => { 
   let inputJson = req.body;
 
@@ -98,6 +100,7 @@ app.delete("/titles/:id", (req: express.Request, res: express.Response) => {
   }
 });
 
+//Users request
 app.get("/users", (_req: express.Request, res: express.Response) => {
   res.send(mockData.users);
 });
@@ -109,7 +112,6 @@ app.get('/users/:id', (req: express.Request, res: express.Response) => {
 
 });
 
-//TODO: isn't adding id if it's not specified in the body
 app.post("/users", (req: express.Request, res: express.Response) => { 
   let inputJson = req.body;
 
@@ -141,6 +143,53 @@ app.delete("/users/:id", (req: express.Request, res: express.Response) => {
   else {
     mockData.users.splice(id,1)
     inMemoryStore = Object.values(mockData.users);
+    res.json(inMemoryStore[id])
+  }
+});
+
+//Profile request
+app.get("/profiles", (_req: express.Request, res: express.Response) => {
+  res.send(mockData.profiles);
+});
+
+app.get('/profiles/:id', (req: express.Request, res: express.Response) => {
+  
+  let id = parseInt(req.params.id) -1
+  res.send(mockData.profiles[id])
+
+});
+
+app.post("/profiles", (req: express.Request, res: express.Response) => { 
+  let inputJson = req.body;
+
+  inMemoryStore = Object.values(mockData.profiles);
+  let newId = inMemoryStore.length + 1
+
+  inputJson.id = newId
+  inMemoryStore.push(inputJson)
+  res.sendStatus(201)
+});
+
+app.patch("/profiles/:id", (req: express.Request, res: express.Response) => {
+  let inputJson = req.body;
+  let id = parseInt(req.params.id) -1
+
+  for(var key in inputJson)
+    mockData.profiles[id][key] = inputJson[key]
+
+  inMemoryStore = Object.values(mockData.profiles);
+
+  res.json(inMemoryStore[id])
+});
+
+app.delete("/profiles/:id", (req: express.Request, res: express.Response) => {
+  let id = parseInt(req.params.id) -1
+  
+  if (mockData.profiles[id] == null)
+    res.sendStatus(404)
+  else {
+    mockData.profiles.splice(id,1)
+    inMemoryStore = Object.values(mockData.profiles);
     res.json(inMemoryStore[id])
   }
 });
