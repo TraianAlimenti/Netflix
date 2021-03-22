@@ -240,6 +240,53 @@ app.delete("/notifications/:id", (req: express.Request, res: express.Response) =
   }
 });
 
+//ProfileNotifications request
+app.get("/profileNotifications", (_req: express.Request, res: express.Response) => {
+  res.send(mockData.profileNotifications);
+});
+
+app.get('/profileNotifications/:id', (req: express.Request, res: express.Response) => {
+  
+  let id = parseInt(req.params.id) -1
+  res.send(mockData.profileNotifications[id])
+
+});
+
+app.post("/profileNotifications", (req: express.Request, res: express.Response) => { 
+  let inputJson = req.body;
+
+  inMemoryStore = Object.values(mockData.profileNotifications);
+  let newId = inMemoryStore.length + 1
+
+  inputJson.id = newId
+  inMemoryStore.push(inputJson)
+  res.sendStatus(201)
+});
+
+app.patch("/profileNotifications/:id", (req: express.Request, res: express.Response) => {
+  let inputJson = req.body;
+  let id = parseInt(req.params.id) -1
+
+  for(var key in inputJson)
+    mockData.profileNotifications[id][key] = inputJson[key]
+
+  inMemoryStore = Object.values(mockData.profileNotifications);
+
+  res.json(inMemoryStore[id])
+});
+
+app.delete("/profileNotifications/:id", (req: express.Request, res: express.Response) => {
+  let id = parseInt(req.params.id) -1
+  
+  if (mockData.profileNotifications[id] == null)
+    res.sendStatus(404)
+  else {
+    mockData.profileNotifications.splice(id,1)
+    inMemoryStore = Object.values(mockData.profileNotifications);
+    res.json(inMemoryStore[id])
+  }
+});
+
 export const createServer = (port?: number, newDatabaseFilename?: string) => {
   if (newDatabaseFilename != undefined) 
     databaseFilename = newDatabaseFilename
