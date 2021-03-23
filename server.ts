@@ -28,7 +28,6 @@ app.post("/categories", (req: any, res: any) => {
 });
 
 app.patch("/categories/:id", (req: any, res: any) => {
-  let newMockData = require(databaseFilename);
   let inputJson = req.body;
   let id = parseInt(req.params.id) -1
 
@@ -53,7 +52,6 @@ app.delete("/categories/:id", (req: any, res: any) => {
 });
 
 export const createServer = (port?: number, newDatabaseFilename?: string) => {
-  mockData = require(databaseFilename);
   const server = app.listen(port, () => {
     // @ts-ignore Express typings are wrong, this value actually does exist
     console.log(`Example app listening at http://localhost:${port ?? server.address().port}`);
