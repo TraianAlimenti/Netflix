@@ -1,10 +1,9 @@
 import express from "express";
-const bodyParser = require('body-parser')
 let databaseFilename = './tests/mock.json'
 let mockData = require(databaseFilename);
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 let inMemoryStore = [];
 
 app.get("/categories", (_req: express.Request, res: express.Response) => {
