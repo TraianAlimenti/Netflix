@@ -96,11 +96,7 @@ app.delete("/titles/:id", (req: express.Request, res: express.Response) => {
   }
 });
 
-export const createServer = (port?: number, newDatabaseFilename?: string) => {
-  if (newDatabaseFilename != undefined) 
-    databaseFilename = newDatabaseFilename
-
-  mockData = require(databaseFilename);
+export const createServer = (port?: number) => {
   const server = app.listen(port, () => {
     // @ts-ignore Express typings are wrong, this value actually does exist
     if (port) {
