@@ -5,9 +5,8 @@ import { createServer } from '../server'
 const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
 let server: Http.Server;
-const MOCK_FILE = './tests/mock.json';
 
-describe("Resources test", () => {
+describe("Titles", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','title','categoryId','logo','synopsis','showInformation','pg','trailer'];
 
   beforeEach(() => {

@@ -6,7 +6,7 @@ const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
 let server: Http.Server;
 
-describe("Resources test", () => {
+describe("Categories", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name'];
 
   beforeEach(() => {
