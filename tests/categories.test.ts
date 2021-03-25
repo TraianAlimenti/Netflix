@@ -5,7 +5,6 @@ import { createServer } from '../server'
 const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
 let server: Http.Server;
-const MOCK_FILE = './tests/mock.json';
 
 describe("Resources test", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name'];
