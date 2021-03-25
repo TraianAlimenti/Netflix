@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 import express from "express";
 let databaseFilename = './tests/mock.json'
 let mockData = require(databaseFilename);
@@ -97,6 +98,14 @@ app.delete("/titles/:id", (req: express.Request, res: express.Response) => {
 });
 
 export const createServer = (port?: number) => {
+  // Option 1: Passing a connection URI
+  const sequelize = new Sequelize('postgres://postgres:postre@localhost:5432/postgres'); // TODO: use process.env for this (use dotenv)
+  sequelize.authenticate()
+    .then(() => {
+      console.log("Connection has been established successfully.");
+    })
+    .catch(e => console.error("Unable to connect to the database:", e));
+
   const server = app.listen(port, () => {
     // @ts-ignore Express typings are wrong, this value actually does exist
     if (port) {
