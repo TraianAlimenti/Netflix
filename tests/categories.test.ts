@@ -16,7 +16,7 @@ describe("Resources test", () => {
     TARGET_URL = `${BASE_URL}:${port}`;
   });
 
-  it.only("get categories", async () => {
+  it("get categories", async () => {
     const response = await fetch(TARGET_URL + "/categories");
     const data = await response.json();
 
@@ -26,7 +26,7 @@ describe("Resources test", () => {
     expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
   });
 
-  it.only("get single categories", async () => {
+  it("get single categories", async () => {
     const response = await fetch(TARGET_URL + "/categories/1");
     const data = await response.json();
 
