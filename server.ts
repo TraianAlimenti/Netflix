@@ -53,7 +53,10 @@ app.delete("/categories/:id", (req: any, res: any) => {
 export const createServer = (port?: number, newDatabaseFilename?: string) => {
   const server = app.listen(port, () => {
     // @ts-ignore Express typings are wrong, this value actually does exist
-    console.log(`Example app listening at http://localhost:${port ?? server.address().port}`);
+    if (port) {
+      // If we want to get the randomly assigned port, use: server.address().port
+      console.log(`Example app listening at http://localhost:${port}`);
+    }
   });
   return server;
 };
