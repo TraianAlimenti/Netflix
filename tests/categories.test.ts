@@ -1,16 +1,20 @@
-import Http from 'http';
+import { Server } from 'http';
 import fetch from "node-fetch";
-import { createServer } from '../server'
+import { createServer, stopServer } from '../server'
 
 const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
-let server: Http.Server;
+let server: Server | boolean;
 
 describe("Categories", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name'];
 
-  beforeEach(() => {
-    server = createServer();
+  beforeEach(async () => {
+    const serverInstance = await createServer();
+    if (!serverInstance) {
+      throw new Error('Error while booting Categories -> beforeEach: Server could not be started');
+    }
+    server = serverInstance;
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
     TARGET_URL = `${BASE_URL}:${port}`;
@@ -65,8 +69,9 @@ describe("Categories", () => {
     expect(response.status).toBe(200);
   });
 
-  afterEach(() => {
-    server.close();
+  afterEach(async () => {
+    // @ts-ignore TODO: Fix this typing
+    stopServer(server);
   });
 
 });
