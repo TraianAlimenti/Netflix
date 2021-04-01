@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsc && node index.js",
     "test": "tsc && jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "dev-seed-db": "cd lib && npx sequelize-cli db:seed:all --url 'postgres://postre:postre@localhost:5432/netflix'"
   },
   "author": "",
   "license": "ISC",
