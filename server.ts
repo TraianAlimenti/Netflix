@@ -1,7 +1,10 @@
 require("dotenv").config(); // dotenv does not work with imports
+
 import { Server } from 'http';
 import { Sequelize } from "sequelize";
 import express, { Request, Response } from "express";
+import { loadModelsIntoSequelizeInstance } from './lib/models/index';
+
 let databaseFilename = "./tests/mock.json";
 let mockData = require(databaseFilename);
 
@@ -9,8 +12,9 @@ const app = express();
 app.use(express.json());
 let inMemoryStore = [];
 
-app.get("/categories", (_req: Request, res: Response) => {
-  res.send(mockData.categories);
+app.get("/categories", async (_req: Request, res: Response) => {
+  const result = await app.get('sequelizeModels').Categories.findAll();
+  res.send(result);
 });
 
 app.get("/categories/:id", (req: Request, res: Response) => {
@@ -103,18 +107,20 @@ export const createServer = (port?: number) => {
     .authenticate()
     .then(() => {
       console.log("Connection has been established successfully.");
+      const models = loadModelsIntoSequelizeInstance(sequelize);
+      app.set("sequelizeInstance", sequelize);
+      app.set("sequelizeModels", models);
     })
-    .then(() => {
-      const server = app.listen(port, () => {
+    .then(() => sequelize.sync({ force: true }))
+    .then(() =>
+      app.listen(port, () => {
         // @ts-ignore Express typings are wrong, this value actually does exist
         if (port) {
           // If we want to get the randomly assigned port, use: server.address().port
           console.log(`Example app listening at http://localhost:${port}`);
         }
-      });
-      app.set("sequelizeInstance", sequelize);
-      return server;
-    })
+      })
+    )
     .catch(e => {
       console.error("Unable to connect to the database:", e);
       return false;
