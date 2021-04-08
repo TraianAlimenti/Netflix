@@ -6,7 +6,9 @@
   "scripts": {
     "start": "tsc && node index.js",
     "test": "tsc && jest",
-    "coverage": "jest --coverage"
+    "test-watch": "tsc && jest --watch",
+    "coverage": "jest --coverage",
+    "dev-seed-db": "cd lib && npx sequelize-cli db:seed:all --url 'postgres://postre:postre@localhost:5432/netflix'"
   },
   "author": "",
   "license": "ISC",
@@ -20,8 +22,13 @@
     "ts-jest": "^26.5.3"
   },
   "dependencies": {
+    "@types/express": "^4.17.11",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.6.2"
   },
   "directories": {
     "test": "tests"
