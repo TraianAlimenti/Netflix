@@ -4,6 +4,7 @@ import { Server } from 'http';
 import { Sequelize } from "sequelize";
 import express, { Request, Response } from "express";
 import { loadModelsIntoSequelizeInstance } from './lib/models/index';
+import mockData from './tests/mock'
 
 const app = express();
 app.use(express.json());
@@ -43,7 +44,40 @@ app.delete("/categories/:id", async (req: any, res: any) => {
   res.sendStatus(204);
 });
 
-// app.get("/titles", (_req: Request, res: Response) => {
+app.get("/titles", async (_req: Request, res: Response) => {
+  const result = await app.get('sequelizeModels').Titles.findAll();
+  res.json(result);
+});
+
+app.get("/titles/:id", async (req: Request, res: Response) => {
+  let id = parseInt(req.params.id);
+  res.json(await app.get('sequelizeModels').Titles.findByPk(id));
+});
+
+// TODO: properly type this or don't type at all
+app.post("/titles", async (req: any, res: any) => {
+  await app.get('sequelizeModels').Titles.create(req.body);
+  res.sendStatus(201);
+});
+
+app.patch("/titles/:id", async (req: any, res: any) => {
+  let id = parseInt(req.params.id);
+  await app.get('sequelizeModels').Titles.update(
+    req.body,
+    { where: { id } }
+  );
+  res.sendStatus(200);
+});
+
+app.delete("/titles/:id", async (req: any, res: any) => {
+  let id = parseInt(req.params.id) - 1;
+  await app.get('sequelizeModels').Titles.destroy(
+    { where: { id } }
+  );
+  res.sendStatus(204);
+});
+
+//app.get("/titles", (_req: Request, res: Response) => {
 //   res.send(mockData.titles);
 // });
 
