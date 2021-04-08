@@ -1,42 +1,27 @@
+import { Server } from 'http';
 import fetch from "node-fetch";
 import { createServer, stopServer } from '../server'
-import { Server } from 'http'
+import mockData from './mock'
 
 const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
 let server: Server;
 
-describe.skip("Titles", () => {
-  const RESOURCE_PROPERTY_NAMES = ['id','title','categoryId','logo','synopsis','showInformation','pg','trailer'];
+describe("Titles", () => {
+  const RESOURCE_PROPERTY_NAMES = ['id','title','categoryId','logo','synopsis','showInformation','pg','trailer', 'createdAt', 'updatedAt'];
 
   beforeEach(async () => {
-    const serverInstance = await createServer();
-    if (!serverInstance) {
-      throw new Error('Error while booting Categories -> beforeEach: Server could not be started');
+    const result = await createServer();
+    if (!result) {
+      throw new Error('Error while booting Titles -> beforeEach: Server could not be started');
     }
-    server = serverInstance.server;
+    server = result.server;
+    let app = result.app
+    await app.get("sequelizeInstance").sync({ force: true });
+    
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
     TARGET_URL = `${BASE_URL}:${port}`;
-  });
-
-  it("get titles", async () => {
-    const response = await fetch(TARGET_URL + "/titles");
-    const data = await response.json();
-
-    expect(Array.isArray(data)).toEqual(true);
-    expect(response.status).toBe(200);
-    expect(data.length).toBe(5);
-    expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-  });
-
-  it("get single titles", async () => {
-    const response = await fetch(TARGET_URL + "/titles/1");
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-    expect(data.id).toBe(1);
   });
 
   it("create titles", async () => {
@@ -45,33 +30,63 @@ describe.skip("Titles", () => {
       headers: { "Content-type": "application/json; charset=UTF-8" },
       body: JSON.stringify({"title": "RussianDoll","categoryId": 1,"logo": "url to a logo","synopsis": "Some related info about this serie","showInformation": "some important info about this serie","pg": "16","trailer": "link to the video"}),
     });
-
     expect(response.status).toBe(201);
   });
 
+  it("get titles", async () => {
+    mockData.titles.forEach(async (title) => {
+      await fetch(TARGET_URL + "/titles/", {
+        method: "POST",
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: JSON.stringify(title)
+      });
+    });
+    const response = await fetch(TARGET_URL + "/titles");
+    const data = await response.json();
+    expect(Array.isArray(data)).toEqual(true);
+    expect(response.status).toBe(200);
+    expect(data.length).toBe(5);
+    expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
+  });
+
+  it("get single title", async () => {
+    await fetch(TARGET_URL + "/titles/", {
+      method: "POST",
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(mockData.titles[0]),
+    });
+    const response = await fetch(TARGET_URL + "/titles/1");
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
+    expect(data.id).toBe(1);
+  });
+
   it("patch titles", async () => {
+    await fetch(TARGET_URL + "/titles/", {
+      method: "POST",
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(mockData.titles[2]),
+    });
     const response = await fetch(TARGET_URL + "/titles/3", {
       method: "PATCH",
       headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"pg": "11","trailer": "another link"}),
+      body: JSON.stringify({"pg": "11","title":"new title"}),
     });
-    const data = await response.json();
     expect(response.status).toBe(200);
-    expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
   });
 
-  it("delete titles", async () => {
+  it("delete title", async () => {
     const response = await fetch(TARGET_URL + "/titles/3", {
       method: "DELETE",
       headers: { "Content-type": "application/json; charset=UTF-8" },
     });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
   });
 
   afterEach(async () => {
-    // @ts-ignore TODO: Fix this typing
     stopServer(server);
   });
-
 });
