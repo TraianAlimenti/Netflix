@@ -21,8 +21,6 @@ describe("Categories", () => {
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
     TARGET_URL = `${BASE_URL}:${port}`;
-    const sequelizeInstance = app.get("sequelizeInstance");
-    sequelizeInstance.sync({ force: true });
   });
 
   it("create categories", async () => {

@@ -16,9 +16,7 @@ describe("Titles", () => {
       throw new Error('Error while booting Titles -> beforeEach: Server could not be started');
     }
     server = result.server;
-    let app = result.app
-    await app.get("sequelizeInstance").sync({ force: true });
-    
+            
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
     TARGET_URL = `${BASE_URL}:${port}`;
