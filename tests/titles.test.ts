@@ -2,7 +2,6 @@ import { Server } from "http";
 import fetch from "node-fetch";
 import faker from 'faker';
 import { createServer, stopServer } from "../server";
-import mockData from "./mock";
 
 let TARGET_URL = "";
 let server: Server;
