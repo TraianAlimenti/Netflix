@@ -4,7 +4,6 @@ import { Server } from 'http';
 import { Sequelize } from "sequelize";
 import express, { Request, Response } from "express";
 import { loadModelsIntoSequelizeInstance } from './lib/models/index';
-import mockData from './tests/mock'
 
 const app = express();
 app.use(express.json());
@@ -77,70 +76,24 @@ app.delete("/titles/:id", async (req: Request, res: Response) => {
   res.sendStatus(204);
 });
 
-//app.get("/titles", (_req: Request, res: Response) => {
-//   res.send(mockData.titles);
-// });
-
-// app.get("/titles/:id", (req: Request, res: Response) => {
-//   let id = parseInt(req.params.id) - 1;
-//   res.send(mockData.titles[id]);
-// });
-
-// //TODO: isn't adding id if it's not specified in the body
-// app.post("/titles", (req: Request, res: Response) => {
-//   let inputJson = req.body;
-
-//   inMemoryStore = Object.values(mockData.titles);
-//   let newId = inMemoryStore.length + 1;
-
-//   inputJson.id = newId;
-//   inMemoryStore.push(inputJson);
-//   res.sendStatus(201);
-// });
-
-// app.patch("/titles/:id", (req: Request, res: Response) => {
-//   let inputJson = req.body;
-//   let id = parseInt(req.params.id) - 1;
-
-//   for (var key in inputJson) mockData.titles[id][key] = inputJson[key];
-
-//   inMemoryStore = Object.values(mockData.titles);
-
-//   res.json(inMemoryStore[id]);
-// });
-
-// app.delete("/titles/:id", (req: Request, res: Response) => {
-//   let id = parseInt(req.params.id) - 1;
-
-//   if (mockData.titles[id] == null) res.sendStatus(404);
-//   else {
-//     mockData.titles.splice(id, 1);
-//     inMemoryStore = Object.values(mockData.titles);
-//     res.json(inMemoryStore[id]);
-//   }
-// });
-
 export const createServer = (port?: number) => {
   // Option 1: Passing a connection URI
   if (!process.env.DATABASE_DSN) {
     return Promise.reject(new Error('Missing DATABASE_DSN environment key, exiting.'));
   }
-  const sequelize = new Sequelize(process.env.DATABASE_DSN, {
+  const dsn = (process.env.NODE_ENV !== 'test' ? process.env.DATABASE_DSN : process.env.TEST_DATABASE_DSN) ?? '';
+  const sequelize = new Sequelize(dsn, {
     logging: process.env.NODE_ENV === 'test' ? () => {} : console.log
   });
   return sequelize
     .authenticate()
     .then(() => {
       if (process.env.NODE_ENV !== 'test') {
-        console.log("Connection has been established successfully.");
+        console.log("Connection to the database has been established successfully.");
       }
       const models = loadModelsIntoSequelizeInstance(sequelize);
       app.set("sequelizeInstance", sequelize);
       app.set("sequelizeModels", models);
-      if (process.env.DANGEROUS_RECREATE_DATABASE) {
-        console.log('DANGEROUS_RECREATE_DATABASE was found, blowing up the database');
-        sequelize.sync({ force: true }); 
-      }
     })
     .then(() => {
       const server = app.listen(port, () => {
