@@ -1,39 +1,37 @@
 import { Server } from 'http';
 import fetch from "node-fetch";
+import faker from 'faker';
 import { createServer, stopServer } from '../server'
 import mockData from './mock'
 
-const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
 let server: Server;
 
 describe("Categories", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name', 'createdAt', 'updatedAt'];
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const result = await createServer();
     if (!result) {
-      throw new Error('Error while booting Categories -> beforeEach: Server could not be started');
+      throw new Error('Error while booting Categories -> beforeAll: Server could not be started');
     }
     server = result.server;
-    const app = result.app;
-    
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
-    TARGET_URL = `${BASE_URL}:${port}`;
+    TARGET_URL = `http://127.0.0.1:${port}`;
   });
 
-  it("create categories", async () => {
+  it.only("create categories", async () => {
     const response = await fetch(TARGET_URL + "/categories/", {
       method: "POST",
       headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"id": 4,"name": "miniserie"}),
+      body: JSON.stringify({ "name": faker.company.bs() }), // don't send ID here!
     });
 
     expect(response.status).toBe(201);
   });
 
-  it("get categories", async () => {
+  it.only("get categories", async () => {
     // create data
     mockData.categories.forEach(async (category) => {
       await fetch(TARGET_URL + "/categories/", {
@@ -90,7 +88,7 @@ describe("Categories", () => {
     expect(response.status).toBe(204);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     stopServer(server);
   });
 });
