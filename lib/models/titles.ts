@@ -13,7 +13,7 @@ const TitlesModel = (sequelize: any) =>
     },
     logo: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false, // TODO: should this be true? maybe it does not have a logo?
     },
     synopsis: {
       type: DataTypes.STRING,
@@ -24,12 +24,12 @@ const TitlesModel = (sequelize: any) =>
       allowNull: false,
     },
     pg: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: DataTypes.STRING, // TODO: maybe this could be an enum? the PG ratings are already predetermined
+      allowNull: false, // TODO: should this be true? maybe it does not have a pg rating?
     },
     trailer: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false, // TODO: should this be true? maybe it does not have a trailer?
     },
   });
 
