@@ -58,20 +58,6 @@ const mockData: {
       trailer: "link to the video"
     }
   ],
-  categories: [
-    {
-      id: 1,
-      name: "serie"
-    },
-    {
-      id: 2,
-      name: "documental"
-    },
-    {
-      id: 3,
-      name: "film"
-    }
-  ],
   user: [
     {
       id: 1,
