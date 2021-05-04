@@ -22,12 +22,12 @@ app.get("/categories/:id", async (req: Request, res: Response) => {
 });
 
 // TODO: properly type this or don't type at all
-app.post("/categories", async (req: any, res: any) => {
+app.post("/categories", async (req: Request, res: Response) => {
   await app.get('sequelizeModels').Categories.create(req.body);
   res.sendStatus(201);
 });
 
-app.patch("/categories/:id", async (req: any, res: any) => {
+app.patch("/categories/:id", async (req: Request, res: Response) => {
   let id = parseInt(req.params.id);
   await app.get('sequelizeModels').Categories.update(
     req.body,
@@ -36,7 +36,7 @@ app.patch("/categories/:id", async (req: any, res: any) => {
   res.sendStatus(200);
 });
 
-app.delete("/categories/:id", async (req: any, res: any) => {
+app.delete("/categories/:id", async (req: Request, res: Response) => {
   let id = parseInt(req.params.id) - 1;
   await app.get('sequelizeModels').Categories.destroy(
     { where: { id } }
@@ -55,12 +55,12 @@ app.get("/titles/:id", async (req: Request, res: Response) => {
 });
 
 // TODO: properly type this or don't type at all
-app.post("/titles", async (req: any, res: any) => {
+app.post("/titles", async (req: Request, res: Response) => {
   await app.get('sequelizeModels').Titles.create(req.body);
   res.sendStatus(201);
 });
 
-app.patch("/titles/:id", async (req: any, res: any) => {
+app.patch("/titles/:id", async (req: Request, res: Response) => {
   let id = parseInt(req.params.id);
   await app.get('sequelizeModels').Titles.update(
     req.body,
@@ -69,7 +69,7 @@ app.patch("/titles/:id", async (req: any, res: any) => {
   res.sendStatus(200);
 });
 
-app.delete("/titles/:id", async (req: any, res: any) => {
+app.delete("/titles/:id", async (req: Request, res: Response) => {
   let id = parseInt(req.params.id) - 1;
   await app.get('sequelizeModels').Titles.destroy(
     { where: { id } }
@@ -137,8 +137,11 @@ export const createServer = (port?: number) => {
       const models = loadModelsIntoSequelizeInstance(sequelize);
       app.set("sequelizeInstance", sequelize);
       app.set("sequelizeModels", models);
+      if (process.env.DANGEROUS_RECREATE_DATABASE) {
+        console.log('DANGEROUS_RECREATE_DATABASE was found, blowing up the database');
+        sequelize.sync({ force: true }); 
+      }
     })
-    .then(() => sequelize.sync({ force: true }))
     .then(() => {
       const server = app.listen(port, () => {
         if (port) {
