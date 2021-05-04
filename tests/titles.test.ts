@@ -1,41 +1,61 @@
-import { Server } from 'http';
+import { Server } from "http";
 import fetch from "node-fetch";
-import { createServer, stopServer } from '../server'
-import mockData from './mock'
+import { createServer, stopServer } from "../server";
+import mockData from "./mock";
 
-const BASE_URL = `http://localhost`;
-let TARGET_URL = '';
+let TARGET_URL = "";
 let server: Server;
+const headers = { "Content-type": "application/json; charset=UTF-8" };
 
 describe("Titles", () => {
-  const RESOURCE_PROPERTY_NAMES = ['id','title','categoryId','logo','synopsis','showInformation','pg','trailer', 'createdAt', 'updatedAt'];
+  const RESOURCE_PROPERTY_NAMES = [
+    "id",
+    "title",
+    "categoryId",
+    "logo",
+    "synopsis",
+    "showInformation",
+    "pg",
+    "trailer",
+    "createdAt",
+    "updatedAt"
+  ];
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const result = await createServer();
     if (!result) {
-      throw new Error('Error while booting Titles -> beforeEach: Server could not be started');
+      throw new Error(
+        "Error while booting Titles -> beforeAll: Server could not be started"
+      );
     }
     server = result.server;
-            
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
-    TARGET_URL = `${BASE_URL}:${port}`;
+    TARGET_URL = `http://127.0.0.1:${port}`;
   });
 
   it("create titles", async () => {
     const response = await fetch(TARGET_URL + "/titles/", {
       method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"title": "RussianDoll","categoryId": 1,"logo": "url to a logo","synopsis": "Some related info about this serie","showInformation": "some important info about this serie","pg": "16","trailer": "link to the video"}),
+      headers,
+      body: JSON.stringify({
+        title: "RussianDoll",
+        categoryId: 1,
+        logo: "url to a logo",
+        synopsis: "Some related info about this serie",
+        showInformation: "some important info about this serie",
+        pg: "16",
+        trailer: "link to the video"
+      })
     });
     expect(response.status).toBe(201);
   });
 
   it("get titles", async () => {
-    mockData.titles.forEach(async (title) => {
+    mockData.titles.forEach(async title => {
       await fetch(TARGET_URL + "/titles/", {
         method: "POST",
-        headers: { "Content-type": "application/json; charset=UTF-8" },
+        headers,
         body: JSON.stringify(title)
       });
     });
@@ -50,8 +70,8 @@ describe("Titles", () => {
   it("get single title", async () => {
     await fetch(TARGET_URL + "/titles/", {
       method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(mockData.titles[0]),
+      headers,
+      body: JSON.stringify(mockData.titles[0])
     });
     const response = await fetch(TARGET_URL + "/titles/1");
     const data = await response.json();
@@ -64,13 +84,13 @@ describe("Titles", () => {
   it("patch titles", async () => {
     await fetch(TARGET_URL + "/titles/", {
       method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(mockData.titles[2]),
+      headers,
+      body: JSON.stringify(mockData.titles[2])
     });
     const response = await fetch(TARGET_URL + "/titles/3", {
       method: "PATCH",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"pg": "11","title":"new title"}),
+      headers,
+      body: JSON.stringify({ pg: "11", title: "new title" })
     });
     expect(response.status).toBe(200);
   });
@@ -78,13 +98,13 @@ describe("Titles", () => {
   it("delete title", async () => {
     const response = await fetch(TARGET_URL + "/titles/3", {
       method: "DELETE",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers
     });
 
     expect(response.status).toBe(204);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     stopServer(server);
   });
 });
