@@ -1,6 +1,5 @@
 const mockData: {
   titles: any[],
-  categories: any[],
   user: any[],
   profiles: any[],
   notifications: any[],
