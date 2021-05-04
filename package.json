@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node index.js",
-    "test": "tsc && DANGEROUS_RECREATE_DATABASE=yep jest",
-    "test-watch": "tsc && DANGEROUS_RECREATE_DATABASE=yep jest --watch",
+    "test": "tsc && jest",
+    "test-watch": "tsc && jest --watch",
     "coverage": "tsc && jest --coverage",
     "dev-seed-db": "cd lib && npx sequelize-cli db:seed:all --url 'postgres://postre:postre@localhost:5432/netflix'"
   },
