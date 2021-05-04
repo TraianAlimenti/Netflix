@@ -73,39 +73,30 @@ describe("Titles", () => {
   });
 
   it("get single title", async () => {
-    await fetch(TARGET_URL + "/titles/", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(mockData.titles[0])
-    });
-    const response = await fetch(TARGET_URL + "/titles/1");
+    const titleId = titles[titles.length - 1].id;
+    const response = await fetch(`${TARGET_URL}/titles/${titleId}`);
     const data = await response.json();
-
     expect(response.status).toBe(200);
     expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-    expect(data.id).toBe(1);
+    expect(data.id).toBe(titleId);
   });
 
   it("patch titles", async () => {
-    await fetch(TARGET_URL + "/titles/", {
-      method: "POST",
-      headers,
-      body: JSON.stringify(mockData.titles[2])
-    });
-    const response = await fetch(TARGET_URL + "/titles/3", {
+    const titleId = titles[titles.length - 1].id;
+    const response = await fetch(`${TARGET_URL}/titles/${titleId}`, {
       method: "PATCH",
       headers,
-      body: JSON.stringify({ pg: "11", title: "new title" })
+      body: JSON.stringify({ pg: "PEGI-18", title: faker.company.bs() })
     });
     expect(response.status).toBe(200);
   });
 
   it("delete title", async () => {
-    const response = await fetch(TARGET_URL + "/titles/3", {
+    const titleId = titles[titles.length - 1].id;
+    const response = await fetch(`${TARGET_URL}/titles/${titleId}`, {
       method: "DELETE",
       headers
     });
-
     expect(response.status).toBe(204);
   });
 
