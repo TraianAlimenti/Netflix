@@ -6,6 +6,7 @@ import mockData from './mock'
 
 let TARGET_URL = '';
 let server: Server;
+let categories: { name: string, id?: number }[] = [];
 
 describe("Categories", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name', 'createdAt', 'updatedAt'];
@@ -32,37 +33,22 @@ describe("Categories", () => {
   });
 
   it.only("get categories", async () => {
-    // create data
-    mockData.categories.forEach(async (category) => {
-      await fetch(TARGET_URL + "/categories/", {
-        method: "POST",
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-        body: JSON.stringify(category),
-      });
-    });
-    
     const response = await fetch(TARGET_URL + "/categories");
     const data = await response.json();
 
     expect(Array.isArray(data)).toEqual(true);
     expect(response.status).toBe(200);
-    expect(data.length).toBe(3);
+    expect(data.length).toBeGreaterThan(0);
     expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
+    categories = data;
   });
 
-  it("get single category", async () => {
-    // create data
-    await fetch(TARGET_URL + "/categories/", {
-      method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(mockData.categories[0]),
-    });
-    const response = await fetch(TARGET_URL + "/categories/1");
+  it.only("get single category", async () => {
+    const response = await fetch(`${TARGET_URL}/categories/${categories[0].id}`);
     const data = await response.json();
-
     expect(response.status).toBe(200);
     expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-    expect(data.id).toBe(1);
+    expect(data.id).toBe(categories[0].id);
   });
 
   it("patch categories", async () => {
