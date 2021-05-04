@@ -2,11 +2,11 @@ import { Server } from 'http';
 import fetch from "node-fetch";
 import faker from 'faker';
 import { createServer, stopServer } from '../server'
-import mockData from './mock'
 
 let TARGET_URL = '';
 let server: Server;
 let categories: { name: string, id?: number }[] = [];
+const headers = { "Content-type": "application/json; charset=UTF-8" };
 
 describe("Categories", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name', 'createdAt', 'updatedAt'];
@@ -25,7 +25,7 @@ describe("Categories", () => {
   it.only("create categories", async () => {
     const response = await fetch(TARGET_URL + "/categories/", {
       method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers,
       body: JSON.stringify({ "name": faker.company.bs() }), // don't send ID here!
     });
 
@@ -52,24 +52,18 @@ describe("Categories", () => {
   });
 
   it("patch categories", async () => {
-    // create data
-    await fetch(TARGET_URL + "/categories/", {
-      method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(mockData.categories[2]), // id=3
-    });
-    const response = await fetch(TARGET_URL + "/categories/3", {
+    const response = await fetch(`${TARGET_URL}/categories/${categories[categories.length - 1].id}`, {
       method: "PATCH",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"name": "somethingRandom"}),
+      headers,
+      body: JSON.stringify({"name": faker.company.bs() }),
     });
     expect(response.status).toBe(200);
   });
 
   it("delete categories", async () => {
-    const response = await fetch(TARGET_URL + "/categories/3", {
+    const response = await fetch(`${TARGET_URL}/categories/${categories[categories.length - 1].id}`, {
       method: "DELETE",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers,
     });
     expect(response.status).toBe(204);
   });
