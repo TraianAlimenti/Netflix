@@ -1,10 +1,21 @@
 import { Server } from "http";
 import fetch from "node-fetch";
+import faker from 'faker';
 import { createServer, stopServer } from "../server";
 import mockData from "./mock";
 
 let TARGET_URL = "";
 let server: Server;
+let titles: { 
+  id?: number
+  title: string,
+  categoryId: number,
+  logo: string,
+  synopsis: string,
+  showInformation: string,
+  pg: string,
+  trailer: string
+}[] = [];
 const headers = { "Content-type": "application/json; charset=UTF-8" };
 
 describe("Titles", () => {
@@ -39,31 +50,25 @@ describe("Titles", () => {
       method: "POST",
       headers,
       body: JSON.stringify({
-        title: "RussianDoll",
-        categoryId: 1,
-        logo: "url to a logo",
-        synopsis: "Some related info about this serie",
-        showInformation: "some important info about this serie",
+        title: faker.company.bs(),
+        categoryId: 1, // this could break
+        logo: faker.image.imageUrl(),
+        synopsis: faker.commerce.productDescription(),
+        showInformation: faker.commerce.productDescription(),
         pg: "16",
-        trailer: "link to the video"
+        trailer: faker.image.imageUrl() 
       })
     });
     expect(response.status).toBe(201);
   });
 
   it("get titles", async () => {
-    mockData.titles.forEach(async title => {
-      await fetch(TARGET_URL + "/titles/", {
-        method: "POST",
-        headers,
-        body: JSON.stringify(title)
-      });
-    });
     const response = await fetch(TARGET_URL + "/titles");
     const data = await response.json();
     expect(Array.isArray(data)).toEqual(true);
     expect(response.status).toBe(200);
-    expect(data.length).toBe(5);
+    titles = data;
+    expect(data.length).toBeGreaterThan(0);
     expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
   });
 
