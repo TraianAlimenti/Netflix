@@ -22,7 +22,7 @@ describe("Categories", () => {
     TARGET_URL = `http://127.0.0.1:${port}`;
   });
 
-  it.only("create categories", async () => {
+  it("create categories", async () => {
     const response = await fetch(TARGET_URL + "/categories/", {
       method: "POST",
       headers,
@@ -32,7 +32,7 @@ describe("Categories", () => {
     expect(response.status).toBe(201);
   });
 
-  it.only("get categories", async () => {
+  it("get categories", async () => {
     const response = await fetch(TARGET_URL + "/categories");
     const data = await response.json();
 
@@ -43,7 +43,7 @@ describe("Categories", () => {
     categories = data;
   });
 
-  it.only("get single category", async () => {
+  it("get single category", async () => {
     const response = await fetch(`${TARGET_URL}/categories/${categories[0].id}`);
     const data = await response.json();
     expect(response.status).toBe(200);
