@@ -1,77 +1,105 @@
+import { Server } from "http";
 import fetch from "node-fetch";
-import { createServer, stopServer } from '../server'
-import { Server } from 'http'
+import faker from 'faker';
+import { createServer, stopServer } from "../server";
 
-const BASE_URL = `http://localhost`;
-let TARGET_URL = '';
+let TARGET_URL = "";
 let server: Server;
+let titles: { 
+  id?: number
+  title: string,
+  categoryId: number,
+  logo: string,
+  synopsis: string,
+  showInformation: string,
+  pg: string,
+  trailer: string
+}[] = [];
+const headers = { "Content-type": "application/json; charset=UTF-8" };
 
-describe.skip("Titles", () => {
-  const RESOURCE_PROPERTY_NAMES = ['id','title','categoryId','logo','synopsis','showInformation','pg','trailer'];
+describe("Titles", () => {
+  const RESOURCE_PROPERTY_NAMES = [
+    "id",
+    "title",
+    "categoryId",
+    "logo",
+    "synopsis",
+    "showInformation",
+    "pg",
+    "trailer",
+    "createdAt",
+    "updatedAt"
+  ];
 
-  beforeEach(async () => {
-    const serverInstance = await createServer();
-    if (!serverInstance) {
-      throw new Error('Error while booting Categories -> beforeEach: Server could not be started');
+  beforeAll(async () => {
+    const result = await createServer();
+    if (!result) {
+      throw new Error(
+        "Error while booting Titles -> beforeAll: Server could not be started"
+      );
     }
-    server = serverInstance.server;
+    server = result.server;
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
-    TARGET_URL = `${BASE_URL}:${port}`;
-  });
-
-  it("get titles", async () => {
-    const response = await fetch(TARGET_URL + "/titles");
-    const data = await response.json();
-
-    expect(Array.isArray(data)).toEqual(true);
-    expect(response.status).toBe(200);
-    expect(data.length).toBe(5);
-    expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-  });
-
-  it("get single titles", async () => {
-    const response = await fetch(TARGET_URL + "/titles/1");
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-    expect(data.id).toBe(1);
+    TARGET_URL = `http://127.0.0.1:${port}`;
   });
 
   it("create titles", async () => {
     const response = await fetch(TARGET_URL + "/titles/", {
       method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"title": "RussianDoll","categoryId": 1,"logo": "url to a logo","synopsis": "Some related info about this serie","showInformation": "some important info about this serie","pg": "16","trailer": "link to the video"}),
+      headers,
+      body: JSON.stringify({
+        title: faker.company.bs(),
+        categoryId: 1, // this could break
+        logo: faker.image.imageUrl(),
+        synopsis: faker.commerce.productDescription(),
+        showInformation: faker.commerce.productDescription(),
+        pg: "16",
+        trailer: faker.image.imageUrl() 
+      })
     });
-
     expect(response.status).toBe(201);
   });
 
-  it("patch titles", async () => {
-    const response = await fetch(TARGET_URL + "/titles/3", {
-      method: "PATCH",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"pg": "11","trailer": "another link"}),
-    });
+  it("get titles", async () => {
+    const response = await fetch(TARGET_URL + "/titles");
+    const data = await response.json();
+    expect(Array.isArray(data)).toEqual(true);
+    expect(response.status).toBe(200);
+    titles = data;
+    expect(data.length).toBeGreaterThan(0);
+    expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
+  });
+
+  it("get single title", async () => {
+    const titleId = titles[titles.length - 1].id;
+    const response = await fetch(`${TARGET_URL}/titles/${titleId}`);
     const data = await response.json();
     expect(response.status).toBe(200);
     expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
+    expect(data.id).toBe(titleId);
   });
 
-  it("delete titles", async () => {
-    const response = await fetch(TARGET_URL + "/titles/3", {
-      method: "DELETE",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+  it("patch titles", async () => {
+    const titleId = titles[titles.length - 1].id;
+    const response = await fetch(`${TARGET_URL}/titles/${titleId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ pg: "PEGI-18", title: faker.company.bs() })
     });
-
     expect(response.status).toBe(200);
   });
 
-  afterEach(async () => {
-    // @ts-ignore TODO: Fix this typing
-    stopServer(server);
+  it("delete title", async () => {
+    const titleId = titles[titles.length - 1].id;
+    const response = await fetch(`${TARGET_URL}/titles/${titleId}`, {
+      method: "DELETE",
+      headers
+    });
+    expect(response.status).toBe(204);
   });
 
+  afterAll(async () => {
+    stopServer(server);
+  });
 });

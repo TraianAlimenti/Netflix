@@ -1,98 +1,74 @@
 import { Server } from 'http';
 import fetch from "node-fetch";
+import faker from 'faker';
 import { createServer, stopServer } from '../server'
-import mockData from './mock'
 
-const BASE_URL = `http://localhost`;
 let TARGET_URL = '';
 let server: Server;
+let categories: { name: string, id?: number }[] = [];
+const headers = { "Content-type": "application/json; charset=UTF-8" };
 
 describe("Categories", () => {
   const RESOURCE_PROPERTY_NAMES = ['id','name', 'createdAt', 'updatedAt'];
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const result = await createServer();
     if (!result) {
-      throw new Error('Error while booting Categories -> beforeEach: Server could not be started');
+      throw new Error('Error while booting Categories -> beforeAll: Server could not be started');
     }
     server = result.server;
-    const app = result.app;
-    
     // @ts-ignore Because the typescript typings for this are incorrect
     const port = server?.address()?.port;
-    TARGET_URL = `${BASE_URL}:${port}`;
-    const sequelizeInstance = app.get("sequelizeInstance");
-    sequelizeInstance.sync({ force: true });
+    TARGET_URL = `http://127.0.0.1:${port}`;
   });
 
   it("create categories", async () => {
     const response = await fetch(TARGET_URL + "/categories/", {
       method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"id": 4,"name": "miniserie"}),
+      headers,
+      body: JSON.stringify({ "name": faker.company.bs() }), // don't send ID here!
     });
 
     expect(response.status).toBe(201);
   });
 
   it("get categories", async () => {
-    // create data
-    mockData.categories.forEach(async (category) => {
-      await fetch(TARGET_URL + "/categories/", {
-        method: "POST",
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-        body: JSON.stringify(category),
-      });
-    });
-    
     const response = await fetch(TARGET_URL + "/categories");
     const data = await response.json();
 
     expect(Array.isArray(data)).toEqual(true);
     expect(response.status).toBe(200);
-    expect(data.length).toBe(3);
+    expect(data.length).toBeGreaterThan(0);
     expect(Object.keys(data[0])).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
+    categories = data;
   });
 
   it("get single category", async () => {
-    // create data
-    await fetch(TARGET_URL + "/categories/", {
-      method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(mockData.categories[0]),
-    });
-    const response = await fetch(TARGET_URL + "/categories/1");
+    const response = await fetch(`${TARGET_URL}/categories/${categories[0].id}`);
     const data = await response.json();
-
     expect(response.status).toBe(200);
     expect(Object.keys(data)).toStrictEqual(RESOURCE_PROPERTY_NAMES); // check that we only have the required fields.
-    expect(data.id).toBe(1);
+    expect(data.id).toBe(categories[0].id);
   });
 
   it("patch categories", async () => {
-    // create data
-    await fetch(TARGET_URL + "/categories/", {
-      method: "POST",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify(mockData.categories[2]), // id=3
-    });
-    const response = await fetch(TARGET_URL + "/categories/3", {
+    const response = await fetch(`${TARGET_URL}/categories/${categories[categories.length - 1].id}`, {
       method: "PATCH",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-      body: JSON.stringify({"name": "somethingRandom"}),
+      headers,
+      body: JSON.stringify({"name": faker.company.bs() }),
     });
     expect(response.status).toBe(200);
   });
 
   it("delete categories", async () => {
-    const response = await fetch(TARGET_URL + "/categories/3", {
+    const response = await fetch(`${TARGET_URL}/categories/${categories[categories.length - 1].id}`, {
       method: "DELETE",
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers,
     });
     expect(response.status).toBe(204);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     stopServer(server);
   });
 });

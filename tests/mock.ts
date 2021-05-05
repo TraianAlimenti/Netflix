@@ -1,77 +1,9 @@
 const mockData: {
-  titles: any[],
-  categories: any[],
   user: any[],
   profiles: any[],
   notifications: any[],
   profileNotifications: any[],
 } = {
-  titles: [
-    {
-      id: 1,
-      title: "lilyhammer",
-      categoryId: 1,
-      logo: "url to a logo",
-      synopsis: "Some related info about this serie",
-      showInformation: "some important info about this serie",
-      pg: "16",
-      trailer: "link to the video"
-    },
-    {
-      id: 2,
-      title: "breakingbad",
-      categoryId: 1,
-      logo: "url to a logo",
-      synopsis: "Some related info about this serie",
-      showInformation: "some important info about this serie",
-      pg: "16",
-      trailer: "link to the video?"
-    },
-    {
-      id: 3,
-      title: "animal planet",
-      categoryId: 2,
-      logo: "url to a logo",
-      synopsis: "Some related info about this doc",
-      showInformation: "some important info about this serie",
-      pg: "7",
-      trailer: "link to the video"
-    },
-    {
-      id: 4,
-      title: "the godfather",
-      categoryId: 3,
-      logo: "url to a logo",
-      synopsis: "Some related info about this movie",
-      showInformation: "some important info about this serie",
-      pg: "13",
-      trailer: "link to the video"
-    },
-    {
-      id: 5,
-      title: "the wolf of wall street",
-      categoryId: 3,
-      logo: "url to a logo",
-      synopsis: "Some related info about this movie",
-      showInformation: "some important info about this serie",
-      pg: "16",
-      trailer: "link to the video"
-    }
-  ],
-  categories: [
-    {
-      id: 1,
-      name: "serie"
-    },
-    {
-      id: 2,
-      name: "documental"
-    },
-    {
-      id: 3,
-      name: "film"
-    }
-  ],
   user: [
     {
       id: 1,
