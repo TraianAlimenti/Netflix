@@ -11,7 +11,7 @@ jobs:
           command: sudo chmod -R 777 /usr/local/lib/node_modules 
       - run:
           name: "Install Typescript globally"
-          command: npm i -g typescript
+          command: sudo npm i -g typescript
 
 workflows:
   node-tests:
