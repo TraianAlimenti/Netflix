@@ -5,6 +5,16 @@ import { Sequelize } from "sequelize";
 import express, { Request, Response } from "express";
 import { loadModelsIntoSequelizeInstance } from './lib/models/index';
 
+const getTestDatabase = () => {
+  if (!process.env.DATABASE_DSN) {
+    return;
+  }
+  const splitted = process.env?.DATABASE_DSN.split('/');
+  const currentDatabase = splitted[splitted.length-1];
+  const mainDatabase = `/${currentDatabase[currentDatabase.length-1]}`;
+  return process.env?.DATABASE_DSN.replace(mainDatabase,'/test');
+}
+
 const app = express();
 app.use(express.json());
 
@@ -81,7 +91,8 @@ export const createServer = (port?: number) => {
   if (!process.env.DATABASE_DSN) {
     return Promise.reject(new Error('Missing DATABASE_DSN environment key, exiting.'));
   }
-  const dsn = (process.env.NODE_ENV !== 'test' ? process.env.DATABASE_DSN : process.env.TEST_DATABASE_DSN) ?? '';
+  const TEST_DATABASE_DSN = getTestDatabase();
+  const dsn = (process.env.NODE_ENV !== 'test' ? process.env.DATABASE_DSN : TEST_DATABASE_DSN) ?? '';
   const sequelize = new Sequelize(dsn, {
     logging: process.env.NODE_ENV === 'test' ? () => {} : console.log
   });
