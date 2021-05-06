@@ -3,8 +3,12 @@ orbs:
   node: circleci/node@3.0.0
 jobs:
   installTscGlobally:
+    docker:
+      - image: circleci/node:lts
     steps:
-      - npm i -g typescript
+      - run:
+          name: "Install Typescript globally"
+          command: npm i -g typescript
 
 workflows:
   node-tests:
