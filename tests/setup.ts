@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize';
 import { loadModelsIntoSequelizeInstance } from '../lib/models';
 
 module.exports = async () => {
-  if (process.env.NODE_ENV !== 'test' || !process.env.DATABASE_DSN || !process.env.TEST_DATABASE_DSN) {
+  if (process.env.NODE_ENV !== 'test' || !process.env.DATABASE_DSN) {
     const errorMsg = 'setup.ts: Tried to run but missing requirements. Exiting. TESTS WILL FAIL';
     console.error(errorMsg);
     throw new Error(errorMsg);
@@ -14,10 +14,13 @@ module.exports = async () => {
   });
   try {
     await mainSequelize.authenticate()
-    await mainSequelize.query("DROP DATABASE IF EXISTS test");
+    await mainSequelize.query("DROP DATABASE test");
     await mainSequelize.query("CREATE DATABASE test");
     await mainSequelize.close();
-    const sequelize = new Sequelize(process.env.TEST_DATABASE_DSN ?? '', {
+    const currentDatabase = process.env.DATABASE_DSN.split('/');
+    const mainDatabase = `/${currentDatabase[currentDatabase.length-1]}`;
+    const TEST_DATABASE_DSN = process.env.DATABASE_DSN.replace(mainDatabase,'/test');
+    const sequelize = new Sequelize(TEST_DATABASE_DSN ?? '', {
       logging: console.log
     });
     loadModelsIntoSequelizeInstance(sequelize); // we need this so the next sequelize.sync call knows what models to sync
