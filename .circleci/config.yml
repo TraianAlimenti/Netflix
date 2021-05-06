@@ -8,7 +8,7 @@ jobs:
     steps:
       - run:
           name: "Chown those modules"
-          command: chmod -R 777 /usr/local/lib/node_modules 
+          command: sudo chmod -R 777 /usr/local/lib/node_modules 
       - run:
           name: "Install Typescript globally"
           command: npm i -g typescript
