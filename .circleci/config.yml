@@ -1,8 +1,14 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
+jobs:
+  installTscGlobally:
+    steps:
+      - npm i -g typescript
+
 workflows:
   node-tests:
     jobs:
+      - installTscGlobally
       - node/test
 
