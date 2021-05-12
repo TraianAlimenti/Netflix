@@ -19,16 +19,16 @@ const headers = { "Content-type": "application/json; charset=UTF-8" };
 
 describe("Titles", () => {
   const RESOURCE_PROPERTY_NAMES = [
-    "id",
-    "title",
-    "categoryId",
-    "logo",
-    "synopsis",
-    "showInformation",
-    "pg",
-    "trailer",
-    "createdAt",
-    "updatedAt"
+    'id',
+    'title',
+    'categoryId',
+    'logo',
+    'synopsis',
+    'showInformation',
+    'pg',
+    'trailer',
+    'createdAt',
+    'updatedAt'
   ];
 
   beforeAll(async () => {
