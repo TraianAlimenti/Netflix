@@ -1,21 +1,9 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
-jobs:
-  installTscGlobally:
-    docker:
-      - image: circleci/node:lts
-    steps:
-      - run:
-          name: "Chown those modules"
-          command: sudo chmod -R 777 /usr/local/lib/node_modules 
-      - run:
-          name: "Install Typescript globally"
-          command: sudo npm i -g typescript
 
 workflows:
   node-tests:
     jobs:
-      - installTscGlobally
       - node/test
 
