@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/repo
     docker:
       - image: circleci/postgres:9.6.2-alpine
-       auth:
+        auth:
           username: traian07 
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
@@ -13,7 +13,7 @@ jobs:
           POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
           POSTGRES_DB: $POSTGRES_DB
       - image: cimg/node:16.1.0
-       auth:
+        auth:
           username: traian07 
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
