@@ -12,7 +12,7 @@ jobs:
           POSTGRES_USER: $POSTGRES_USER
           POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
           POSTGRES_DB: $POSTGRES_DB
-      - image: cimg/node:16.1.0
+      - image: circleci/node:16.1.0
         auth:
           username: traian07 
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
