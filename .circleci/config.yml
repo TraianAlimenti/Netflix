@@ -23,12 +23,8 @@ jobs:
       environment:
         POSTGRES_USER: postre
         POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-        POSTGRES_DB: test
+        POSTGRES_DB: netflix
     
-    environment:
-      NODE_ENV: test
-      POSTGRES_USER: postre
-      POSTGRES_DB: test    
     steps:
       - checkout
       - run: npm -v
