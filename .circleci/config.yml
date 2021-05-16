@@ -60,6 +60,9 @@ jobs:
       #       psql -d postgres -c "create database test;" \
       #       psql -d postgres -c "grant all privileges on database test to postre;"
       - run:
+          name: install plsql client
+          command: sudo apt update && sudo apt install postgresql-client
+      - run:
           name: create database
           command: |
             set PGPASSWORD=postre
