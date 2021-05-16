@@ -24,7 +24,7 @@ jobs:
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       environment:
         POSTGRES_USER: postre
-        POSTGRES_PASSWORD: postre
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
         POSTGRES_DB: netflix
     steps:
       - checkout
@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Run tests
           environment:
-            CONTACTS_DB_URL: "postgres://postre:postre@localhost:5432/netflix?sslmode=disable"
+            DATABASE_DSN: "postgres://postre:postre@localhost:5432/netflix?sslmode=disable"
           command: |
             npm run test
       - run: npm run test
