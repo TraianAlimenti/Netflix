@@ -29,9 +29,10 @@ jobs:
 
     steps:
       - checkout
-      - run: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-      - run: sudo apt-get install nodejs
+      # - run: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+      # - run: sudo apt-get install nodejs
       - run: npm -v
+      - run: npm i
       - restore_cache:
           name: restoring_cache
           key: dependency-cache-{{ checksum "package-lock.json" }}
