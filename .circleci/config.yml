@@ -50,10 +50,10 @@ jobs:
               sleep 1
             done
             echo Failed waiting for Postgres && exit 1
-      - run: sudo apt update && sudo apt install postgresql-client
-      - run: |
-          psql \
-          -c "CREATE DATABASE test;"
+      # - run: sudo apt update && sudo apt install postgresql-client
+      # - run: |
+      #     psql \
+      #     -c "CREATE DATABASE test;"
       #Run validation checks & generate coverage reports
       - run: npm run test
       #Send coverage report to Codecov
