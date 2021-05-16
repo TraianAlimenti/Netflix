@@ -34,15 +34,15 @@ jobs:
       - run: npm -v
       - restore_cache:
           name: restoring_cache
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
       #- run: npm install
       - save_cache:
           name: saving_cache
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-      # - run: npm set proxy $PROXY
-      # - run: npm set https-proxy $PROXY
       - run: sudo apt-get install -y node-typescript
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
