@@ -32,13 +32,13 @@ jobs:
       - run: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - run: sudo apt-get install nodejs
       - run: npm -v
-      - restore_cache:
-          name: restoring_cache
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+      # - restore_cache:
+      #     name: restoring_cache
+      #     key: dependency-cache-{{ checksum "package-lock.json" }}
       #- run: npm install
       - save_cache:
           name: saving_cache
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       # - run: npm set proxy $PROXY
