@@ -29,6 +29,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - run: echo "$POSTGRES_USER $POSTGRES_PASSWORD $POSTGRES_DB"
       - run: npm -v
       - run: npm i
       - restore_cache:
