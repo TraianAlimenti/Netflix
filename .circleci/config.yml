@@ -11,12 +11,11 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
           POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
           POSTGRES_DB: $POSTGRES_DB
     # Steps are a list of commands to run inside the docker container above.
-    steps:
-      - checkout # this pulls code down from GitHub
-      - run: echo "Database is up" # This prints "A first hello" to stdout.
-      - run: sleep 3 # a command telling the job to "sleep" for 25 seconds.
-  node: # This is our second job.
-    docker: # it runs inside a docker image, the same as above.
+    # steps:
+    #   - checkout # this pulls code down from GitHub
+    #   - run: echo "Database is up" # This prints "A first hello" to stdout.
+    #   - run: sleep 3 # a command telling the job to "sleep" for 25 seconds.
+      
       - image: cimg/node:16.1.0
         auth:
           username: traian07 
@@ -41,14 +40,41 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
           path: coverage
           prefix: coverage
       - store_test_results:
-          path: ./coverage/clover.xml
+          path: ./coverage/clover.xml  
+  # node: # This is our second job.
+  #   docker: # it runs inside a docker image, the same as above.
+  #     - image: cimg/node:16.1.0
+  #       auth:
+  #         username: traian07 
+  #         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+  #       environment:
+  #         milanesa: true
+  #   steps:
+  #     - checkout
+  #     #- run: npm install
+  #     - run: npm -v
+  #     - run: npm install typescript -g
+  #     #Wait for Postgres connection to open.
+  #     #- run: dockerize -wait tcp://localhost:5432 -timeout 10m
+  #     #Run validation checks & generate coverage reports
+  #     - run: npm run test 
+  #     #Send coverage report to Codecov
+  #     - run: yarn start reportCoverage
+  #     - store_artifacts:
+  #         path: ./coverage/clover.xml
+  #         prefix: tests
+  #     - store_artifacts:
+  #         path: coverage
+  #         prefix: coverage
+  #     - store_test_results:
+  #         path: ./coverage/clover.xml
 # Under the workflows: map, we can coordinate our two jobs, defined above.
 workflows:
   version: 2.1
   netflix_jobs: # this is the name of our workflow
     jobs: # and here we list the jobs we are going to run.
       - postgreSQL
-      - node
+      # - node
 
 #     steps:
       # - checkout
