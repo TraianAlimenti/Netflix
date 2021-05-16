@@ -41,7 +41,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-      - run: sudo apt-get update && sudo apt-get install postgresql-client-9.6
+      - run: sudo apt update && sudo apt install postgresql-client
       - run: |
           psql \
           -d $TEST_DATABASE_URL \
