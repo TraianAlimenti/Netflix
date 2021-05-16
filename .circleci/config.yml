@@ -25,7 +25,7 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
           milanesa: true
     steps:
       - checkout
-      - run: npm install
+      #- run: npm install
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       #Run validation checks & generate coverage reports
