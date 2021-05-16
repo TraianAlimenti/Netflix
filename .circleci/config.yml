@@ -15,10 +15,6 @@ jobs:
       auth:
         username: traian07 
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      environment:
-        PGHOST: 127.0.0.1
-        PGUSER: postre
-        NODE_ENV: test
     # Secondary container image on common network.
     - image: circleci/postgres:9.6.2-alpine
       auth:
@@ -28,6 +24,11 @@ jobs:
         POSTGRES_USER: postre
         POSTGRES_PASSWORD: $POSTGRES_PASSWORD
         POSTGRES_DB: netflix
+    
+    environment:
+      NODE_ENV: test
+      POSTGRES_USER: postre
+      POSTGRES_DB: netflix    
     steps:
       - checkout
       - run: npm -v
@@ -44,19 +45,24 @@ jobs:
               sleep 1
             done
             echo Failed waiting for Postgres && exit 1
-      - run: sudo apt update && sudo apt install postgresql-client
+      - run:
+          name: Create database postgres
+          command: |
+            sudo apt update && sudo apt install postgresql-client
+            dockerize -wait tcp://localhost:5432 -timeout 1m
+            psql -U postre -h localhost -p 5432 -c 'create database test'
       # - run: |
       #     psql \
       #     -c "CREATE DATABASE test;"
       #Run validation checks & generate coverage reports
-      - run:
-          name: Setup postgresql user
-          command: | 
-            #psql -d test -U postre
-            psql -d postgres -c "create user postre with password 'postre';" \
-            psql -d postgres -c "alter user postre with superuser;" \
-            psql -d postgres -c "create database test;" \
-            psql -d postgres -c "grant all privileges on database test to postre;"
+      # - run:
+      #     name: Setup postgresql user
+      #     command: | 
+      #       #psql -d test -U postre
+      #       psql -d postgres -c "create user postre with password 'postre';" \
+      #       psql -d postgres -c "alter user postre with superuser;" \
+      #       psql -d postgres -c "create database test;" \
+      #       psql -d postgres -c "grant all privileges on database test to postre;"
       - run:
           name: Run tests
           environment:
