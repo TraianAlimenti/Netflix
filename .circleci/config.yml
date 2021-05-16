@@ -32,6 +32,7 @@ jobs:
       # - run: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       # - run: sudo apt-get install nodejs
       - run: npm -v
+      - run: npm i
       - restore_cache:
           name: restoring_cache
           key: dependency-cache-{{ checksum "package-lock.json" }}
@@ -43,7 +44,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-      - run: sudo apt-get install -y node-typescript
+      #- run: sudo apt-get install -y node-typescript
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       #- run: npm install express
