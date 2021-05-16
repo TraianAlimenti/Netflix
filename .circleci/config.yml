@@ -53,10 +53,10 @@ jobs:
           name: Setup postgresql user
           command: | 
             #psql -d test -U postre
-            psql -d postgres 5432 -c "create user postre with password 'postre';" \
-            psql -d postgres 5432 -c "alter user postre with superuser;" \
-            psql -d postgres 5432 -c "create database test;" \
-            psql -d postgres 5432 -c "grant all privileges on database test to postre;"
+            psql -d postgres -c "create user postre with password 'postre';" \
+            psql -d postgres -c "alter user postre with superuser;" \
+            psql -d postgres -c "create database test;" \
+            psql -d postgres -c "grant all privileges on database test to postre;"
       - run:
           name: Run tests
           environment:
