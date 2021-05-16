@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - checkout
-      - run: npm install
+      #- run: npm install
       - run: npm -v
       - run: npm install typescript -g
       #Wait for Postgres connection to open.
