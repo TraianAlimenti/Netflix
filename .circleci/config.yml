@@ -28,7 +28,8 @@ jobs:
       - run: npm -v
       - run: sudo apt-get install -y node-typescript
       #Wait for Postgres connection to open.
-      #- run: dockerize -wait tcp://localhost:5432 -timeout 10m
+      - run: dockerize -wait tcp://localhost:5432 -timeout 10m
+      - run: npm install express
       #Run validation checks & generate coverage reports
       - run: npm run test 
       #Send coverage report to Codecov
