@@ -19,7 +19,7 @@ jobs:
         POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
         POSTGRES_DB: $POSTGRES_DB
 
-    working_directory: ~/
+    working_directory: ~/repo
 
     steps:
       - checkout
