@@ -1,10 +1,11 @@
 version: 2.1
 
 jobs:
-  build:
-    working_directory: ~/repo
+  one:
+  #build:
+    #working_directory: ~/repo
     docker:
-      - image: cimg/postgres:9.6.2-alpine
+      - image: circleci/postgres:9.6.2-alpine
         auth:
           username: traian07 
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -12,6 +13,8 @@ jobs:
           POSTGRES_USER: $POSTGRES_USER
           POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
           POSTGRES_DB: $POSTGRES_DB
+  two:
+    docker:
       - image: cimg/node:16.1.0
         auth:
           username: traian07 
@@ -35,5 +38,3 @@ jobs:
       #     prefix: coverage
       # - store_test_results:
       #     path: ./coverage/clover.xml
-
-
