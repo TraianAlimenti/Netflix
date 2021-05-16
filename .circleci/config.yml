@@ -27,6 +27,7 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
       - checkout
       #- run: npm install
       - run: npm -v
+      - run: npm install typescript -g
       #Wait for Postgres connection to open.
       #- run: dockerize -wait tcp://localhost:5432 -timeout 10m
       #Run validation checks & generate coverage reports
