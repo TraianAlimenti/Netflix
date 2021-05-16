@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Run tests
           environment:
-            DATABASE_DSN: "postgres://postre:postre@localhost:5432/netflix?sslmode=disable"
+            DATABASE_URL: "postgres://postre:postre@localhost:5432/netflix?sslmode=disable"
           command: |
             npm run test
       - run: npm run test
