@@ -42,7 +42,6 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-      - run: locate psql
       - run: sudo su - postgres && psql && CREATE ROLE $POSTGRES_USER && GRANT ALL PRIVILEGES ON DATABASE test to $POSTGRES_USER
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
