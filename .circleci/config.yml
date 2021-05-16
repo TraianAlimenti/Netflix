@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - run: npm -v
-      # - run: npm i
+      - run: npm i
       - restore_cache:
           name: restoring_cache
           key: dependency-cache-{{ checksum "package-lock.json" }}
