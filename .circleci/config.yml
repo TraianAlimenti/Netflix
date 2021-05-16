@@ -41,7 +41,13 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-      #- run: sudo su - postgres && psql && CREATE ROLE $POSTGRES_USER && GRANT ALL PRIVILEGES ON DATABASE test to $POSTGRES_USER
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-9.6
+      - run: whoami
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "CREATE DATABASE test;"
       #Wait for Postgres connection to open.
       - run:
           name: Waiting for Postgres to be ready
