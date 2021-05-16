@@ -28,7 +28,7 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
       #- run: npm install
       - run: npm -v
       #Wait for Postgres connection to open.
-      - run: dockerize -wait tcp://localhost:5432 -timeout 10m
+      #- run: dockerize -wait tcp://localhost:5432 -timeout 10m
       #Run validation checks & generate coverage reports
       - run: npm run test 
       #Send coverage report to Codecov
