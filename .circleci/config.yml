@@ -8,6 +8,7 @@ workflows:
 
 jobs:
   build:
+    working_directory: ~/repo
     docker:
     # Primary container image where all steps run.
     - image: cimg/node:16.1.0
@@ -22,14 +23,12 @@ jobs:
         username: traian07 
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       environment:
-        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_USER: postre
         POSTGRES_PASSWORD: $POSTGRES_PASSWORD
         POSTGRES_DB: $POSTGRES_DB
 
-    working_directory: ~/repo
     steps:
       - checkout
-      - run: echo "$POSTGRES_USER $POSTGRES_PASSWORD $POSTGRES_DB"
       - run: npm -v
       - run: npm i
       - restore_cache:
@@ -45,6 +44,7 @@ jobs:
             - ./node_modules
       #- run: sudo su - postgres && psql && CREATE ROLE $POSTGRES_USER && GRANT ALL PRIVILEGES ON DATABASE test to $POSTGRES_USER
       #Wait for Postgres connection to open.
+      - run: sleep 30
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       #Run validation checks & generate coverage reports
       - run: npm run test
