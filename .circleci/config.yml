@@ -1,6 +1,6 @@
 version: 2.1
 jobs: # we now have TWO jobs, so that a workflow can coordinate them!
-  one: # This is our first job.
+  postgreSQL: # This is our first job.
     docker: # it uses the docker executor
       - image: circleci/postgres:9.6.2-alpine
         auth:
@@ -15,7 +15,7 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
       - checkout # this pulls code down from GitHub
       - run: echo "Database is up" # This prints "A first hello" to stdout.
       - run: sleep 3 # a command telling the job to "sleep" for 25 seconds.
-  two: # This is our second job.
+  node: # This is our second job.
     docker: # it runs inside a docker image, the same as above.
       - image: cimg/node:16.1.0
         auth:
@@ -26,8 +26,9 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
     steps:
       - checkout
       #- run: npm install
+      - run: npm -v
       #Wait for Postgres connection to open.
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: dockerize -wait tcp://localhost:5432 -timeout 10m
       #Run validation checks & generate coverage reports
       - run: npm run test 
       #Send coverage report to Codecov
@@ -43,10 +44,10 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
 # Under the workflows: map, we can coordinate our two jobs, defined above.
 workflows:
   version: 2.1
-  one_and_two: # this is the name of our workflow
+  netflix_jobs: # this is the name of our workflow
     jobs: # and here we list the jobs we are going to run.
-      - one
-      - two
+      - postgreSQL
+      - node
 
 #     steps:
       # - checkout
