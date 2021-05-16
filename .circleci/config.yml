@@ -36,10 +36,11 @@ jobs:
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       # - run:
+      #     name: install plsql client
+      #     command: sudo apt update && sudo apt install postgresql-client
+      # - run:
       #     name: Create database postgres
       #     command: |
-      #       sudo apt update && sudo apt install postgresql-client
-      #       dockerize -wait tcp://localhost:5432 -timeout 1m
       #       # psql -U postre -h localhost -p 5432 -c 'create database test'
       #       psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" 
       #       # \<<-EOSQL \
@@ -59,14 +60,6 @@ jobs:
       #       psql -d postgres -c "alter user postre with superuser;" \
       #       psql -d postgres -c "create database test;" \
       #       psql -d postgres -c "grant all privileges on database test to postre;"
-      - run:
-          name: install plsql client
-          command: sudo apt update && sudo apt install postgresql-client
-      - run:
-          name: create database
-          command: |
-            set PGPASSWORD=postre
-            psql --host localhost -U postre -d test
       - run:
           name: Run tests
           command: |
