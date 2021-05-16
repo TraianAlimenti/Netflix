@@ -50,7 +50,12 @@ jobs:
           command: |
             sudo apt update && sudo apt install postgresql-client
             dockerize -wait tcp://localhost:5432 -timeout 1m
-            psql -U postre -h localhost -p 5432 -c 'create database test'
+            # psql -U postre -h localhost -p 5432 -c 'create database test'
+            psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" \<<-EOSQL \
+              CREATE USER postre; \
+              CREATE DATABASE test; \
+              GRANT ALL PRIVILEGES ON DATABASE test TO postre; \
+            EOSQL
       # - run: |
       #     psql \
       #     -c "CREATE DATABASE test;"
