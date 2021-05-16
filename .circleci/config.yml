@@ -33,7 +33,6 @@ jobs:
       - checkout
       - run: npm -v
       - run: npm i
-      - run: sudo docker-compose up
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       # - run:
@@ -60,6 +59,11 @@ jobs:
       #       psql -d postgres -c "alter user postre with superuser;" \
       #       psql -d postgres -c "create database test;" \
       #       psql -d postgres -c "grant all privileges on database test to postre;"
+      - run:
+          name: create database
+          command: |
+            set PGPASSWORD=postre
+            psql --host localhost -U postre -d test
       - run:
           name: Run tests
           environment:
