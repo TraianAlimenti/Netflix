@@ -1,135 +1,70 @@
-# version: 2.1
+version: 2.1
 
-# workflows:
-#   version: 2
-#   build:
-#     jobs:
-#       - build
-
-# jobs:
-#   build:
-#     working_directory: ~/repo
-#     docker:
-#     # Primary container image where all steps run.
-#     - image: cimg/node:16.1.0
-#       auth:
-#         username: traian07 
-#         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-#     # Secondary container image on common network.
-#     - image: circleci/postgres:9.6.2-alpine
-#       auth:
-#         username: traian07 
-#         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-#       environment:
-#         POSTGRES_USER: postre
-#         POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-#         POSTGRES_DB: netflix
-    
-#     environment:
-#       NODE_ENV: test
-#       POSTGRES_USER: postre
-#       POSTGRES_DB: netflix    
-#     steps:
-#       - checkout
-#       - run: npm -v
-#       - run: npm i
-#       #Wait for Postgres connection to open.
-#       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-#       - run:
-#           name: Waiting for Postgres to be ready
-#           command: |
-#             for i in `seq 1 10`;
-#             do
-#               nc -z localhost 5432 && echo Success && exit 0
-#               echo -n .
-#               sleep 1
-#             done
-#             echo Failed waiting for Postgres && exit 1
-#       - run:
-#           name: Create database postgres
-#           command: |
-#             sudo apt update && sudo apt install postgresql-client
-#             dockerize -wait tcp://localhost:5432 -timeout 1m
-#             # psql -U postre -h localhost -p 5432 -c 'create database test'
-#             psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" 
-#             # \<<-EOSQL \
-#             #   createuser -d postre; \
-#             #   CREATE DATABASE test; \
-#             #   GRANT ALL PRIVILEGES ON DATABASE test TO postre; \
-#             # EOSQL
-#       # - run: |
-#       #     psql \
-#       #     -c "CREATE DATABASE test;"
-#       #Run validation checks & generate coverage reports
-#       # - run:
-#       #     name: Setup postgresql user
-#       #     command: | 
-#       #       #psql -d test -U postre
-#       #       psql -d postgres -c "create user postre with password 'postre';" \
-#       #       psql -d postgres -c "alter user postre with superuser;" \
-#       #       psql -d postgres -c "create database test;" \
-#       #       psql -d postgres -c "grant all privileges on database test to postre;"
-#       - run:
-#           name: Run tests
-#           environment:
-#             DATABASE_URL: "postgres://postre:postre@localhost:5432/netflix?sslmode=disable"
-#           command: |
-#             npm run test
-#       - run: npm run test
-#       #Send coverage report to Codecov
-#       - run: yarn start reportCoverage
-#       - store_artifacts:
-#           path: ./coverage/clover.xml
-#           prefix: tests
-#       - store_artifacts:
-#           path: coverage
-#           prefix: coverage
-#       - store_test_results:
-#           path: ./coverage/clover.xml  
-
-
-version: 2.1 # Use 2.1 to enable using orbs and other features.
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
 
 jobs:
   build:
     working_directory: ~/repo
     docker:
     # Primary container image where all steps run.
-    - image: circleci/postgres:9.6.2-alpine
-      auth:
-        username: traian07 
-        password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-      environment:
-        POSTGRES_USER: postre
-        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-        POSTGRES_DB: netflix
-    steps:
-      - checkout
-          
-  test:  # our next job, called "test"
-    # we run "parallel job containers" to enable speeding up our tests;
-    # this splits our tests across multiple containers.
-    parallelism: 3 
-    # here we set TWO docker images.
-    docker:
     - image: cimg/node:16.1.0
       auth:
         username: traian07 
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    # Secondary container image on common network.
+    - image: circleci/postgres:9.6.2-alpine
+      auth:
+        username: traian07 
+        password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      # environment:
+      #   POSTGRES_USER: postre
+      #   POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      #   POSTGRES_DB: netflix
     
-    # environment variables specific to Ruby/Rails, applied to the primary container.
     environment:
-      PGHOST: 127.0.0.1
-      PGUSER: postre
-      PGPASSWORD: postre
       NODE_ENV: test
-    # A series of steps to run, some are similar to those in "build".
+      POSTGRES_USER: postre
+      POSTGRES_DB: netflix    
     steps:
       - checkout
       - run: npm -v
       - run: npm i
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      # - run:
+      #     name: Create database postgres
+      #     command: |
+      #       sudo apt update && sudo apt install postgresql-client
+      #       dockerize -wait tcp://localhost:5432 -timeout 1m
+      #       # psql -U postre -h localhost -p 5432 -c 'create database test'
+      #       psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" 
+      #       # \<<-EOSQL \
+      #       #   CREATE USER -d postre; \
+      #       #   CREATE DATABASE test; \
+      #       #   GRANT ALL PRIVILEGES ON DATABASE test TO postre; \
+      #       # EOSQL
+      # - run: |
+      #     psql \
+      #     -c "CREATE DATABASE test;"
+      #Run validation checks & generate coverage reports
+      # - run:
+      #     name: Setup postgresql user
+      #     command: | 
+      #       #psql -d test -U postre
+      #       psql -d postgres -c "create user postre with password 'postre';" \
+      #       psql -d postgres -c "alter user postre with superuser;" \
+      #       psql -d postgres -c "create database test;" \
+      #       psql -d postgres -c "grant all privileges on database test to postre;"
+      - run:
+          name: Run tests
+          environment:
+            DATABASE_URL: "postgres://postre:postre@localhost:5432/netflix?sslmode=disable"
+          command: |
+            npm run test
       - run: npm run test
       #Send coverage report to Codecov
       - run: yarn start reportCoverage
@@ -141,13 +76,3 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: ./coverage/clover.xml  
-
-# We use workflows to orchestrate the jobs that we declared above.
-workflows:
-  version: 2
-  build_and_test:     # The name of our workflow is "build_and_test"
-    jobs:             # The list of jobs we run as part of this workflow.
-      - build         # Run build first.
-      - test:         # Then run test,
-          requires:   # Test requires that build passes for it to run.
-            - build   # Finally, run the build job.
