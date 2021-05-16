@@ -105,7 +105,6 @@ jobs:
         POSTGRES_DB: netflix
     steps:
       - checkout
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
           
   test:  # our next job, called "test"
     # we run "parallel job containers" to enable speeding up our tests;
