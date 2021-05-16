@@ -1,6 +1,14 @@
-version: 2.1
+version: 2
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+
 jobs:
   build:
+    working_directory: ~/repo
     docker:
     # Primary container image where all steps run.
     - image: cimg/node:16.1.0
@@ -19,20 +27,28 @@ jobs:
         POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
         POSTGRES_DB: $POSTGRES_DB
 
-    working_directory: ~/repo
-
     steps:
       - checkout
       - run: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - run: sudo apt-get install nodejs
       - run: npm -v
+      - restore_cache:
+        name: restoring_cache
+        key:
+          - dependency-cache-{{ checksum "package-lock.json" }}
+      - run: npm install
+      - save_cache:
+        name: saving_cache
+        key: 
+          - dependency-cache-{{ checksum "package-lock.json" }}
+        paths:
+          - ./node_modules
       - run: npm set proxy $PROXY
       - run: npm set https-proxy $PROXY
       - run: sudo apt-get install -y node-typescript
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run: yarn add express
-      #- run: npm install express
+      - run: npm install express
       #Run validation checks & generate coverage reports
       - run: npm run test 
       #Send coverage report to Codecov
@@ -45,8 +61,6 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: ./coverage/clover.xml  
-
-
 
 
 # version: 2.1
