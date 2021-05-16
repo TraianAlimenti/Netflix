@@ -43,7 +43,7 @@ jobs:
             - ./node_modules
       - run: wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add - 
       - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-9.6
+      - run: sudo apt-get install postgresql-9.6
       - run: whoami
       - run: |
           psql \
