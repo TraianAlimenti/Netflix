@@ -26,9 +26,11 @@ jobs:
       - run: curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
       - run: sudo apt-get install nodejs
       - run: npm -v
+      - run: npm set proxy $PROXY
+      - run: npm set https-proxy $PROXY
       - run: sudo apt-get install -y node-typescript
       #Wait for Postgres connection to open.
-      - run: dockerize -wait tcp://localhost:5432 -timeout 10m
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: npm install .\express
       #Run validation checks & generate coverage reports
       - run: npm run test 
