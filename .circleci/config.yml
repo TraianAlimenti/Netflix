@@ -26,11 +26,11 @@ jobs: # we now have TWO jobs, so that a workflow can coordinate them!
     steps:
       - checkout
       - run: npm install
-      Wait for Postgres connection to open.
+      #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      Run validation checks & generate coverage reports
+      #Run validation checks & generate coverage reports
       - run: npm run test 
-      Send coverage report to Codecov
+      #Send coverage report to Codecov
       - run: yarn start reportCoverage
       - store_artifacts:
           path: ./coverage/clover.xml
