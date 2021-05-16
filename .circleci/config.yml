@@ -44,11 +44,17 @@ jobs:
               sleep 1
             done
             echo Failed waiting for Postgres && exit 1
-      # - run: sudo apt update && sudo apt install postgresql-client
+      - run: sudo apt update && sudo apt install postgresql-client
       # - run: |
       #     psql \
       #     -c "CREATE DATABASE test;"
       #Run validation checks & generate coverage reports
+      - run:
+      name: Setup postgresql user
+      command: sudo -u postgres psql -p 5432 -c "create user postre with password 'postre';"
+      command: sudo -u postgres psql -p 5432 -c "alter user postre with superuser;"
+      command: sudo -u postgres psql -p 5432 -c "create database test;"
+      command: sudo -u postgres psql -p 5432 -c "grant all privileges on database test to postre;"
       - run:
           name: Run tests
           environment:
