@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 workflows:
   version: 2
@@ -34,13 +34,11 @@ jobs:
       - run: npm -v
       - restore_cache:
         name: restoring_cache
-        key:
-          - dependency-cache-{{ checksum "package-lock.json" }}
+        key: dependency-cache-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
         name: saving_cache
-        key: 
-          - dependency-cache-{{ checksum "package-lock.json" }}
+        key: dependency-cache-{{ checksum "package-lock.json" }}
         paths:
           - ./node_modules
       - run: npm set proxy $PROXY
