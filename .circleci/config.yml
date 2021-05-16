@@ -55,7 +55,6 @@ jobs:
       - run: sudo apt update && sudo apt install postgresql-client
       - run: |
           psql \
-          -d $TEST_DATABASE_URL \
           -c "CREATE DATABASE test;"
       #Run validation checks & generate coverage reports
       - run: npm run test
