@@ -52,10 +52,11 @@ jobs:
       - run:
           name: Setup postgresql user
           command: | 
-            sudo -u postgres psql -p 5432 -c "create user postre with password 'postre';" \
-            sudo -u postgres psql -p 5432 -c "alter user postre with superuser;" \
-            sudo -u postgres psql -p 5432 -c "create database test;" \
-            sudo -u postgres psql -p 5432 -c "grant all privileges on database test to postre;"
+            psql -d test -U postre
+            # sudo -u postgres psql -p 5432 -c "create user postre with password 'postre';" \
+            # sudo -u postgres psql -p 5432 -c "alter user postre with superuser;" \
+            # sudo -u postgres psql -p 5432 -c "create database test;" \
+            # sudo -u postgres psql -p 5432 -c "grant all privileges on database test to postre;"
       - run:
           name: Run tests
           environment:
