@@ -41,10 +41,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-      - run: wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add - 
-      - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-9.6
-      - run: whoami
+      - run: sudo apt-get update && sudo apt-get install postgresql-client-9.6
       - run: |
           psql \
           -d $TEST_DATABASE_URL \
