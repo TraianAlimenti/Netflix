@@ -31,42 +31,7 @@ jobs:
       - run: npm i
       #Wait for Postgres connection to open.
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-      # - run:
-      #     name: install plsql client
-      #     command: sudo apt update && sudo apt install postgresql-client
-      # - run:
-      #     name: Create database postgres
-      #     command: |
-      #       # psql -U postre -h localhost -p 5432 -c 'create database test'
-      #       psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" 
-      #       # \<<-EOSQL \
-      #       #   CREATE USER -d postre; \
-      #       #   CREATE DATABASE test; \
-      #       #   GRANT ALL PRIVILEGES ON DATABASE test TO postre; \
-      #       # EOSQL
-      # - run: |
-      #     psql \
-      #     -c "CREATE DATABASE test;"
-      #Run validation checks & generate coverage reports
-      # - run:
-      #     name: Setup postgresql user
-      #     command: | 
-      #       #psql -d test -U postre
-      #       psql -d postgres -c "create user postre with password 'postre';" \
-      #       psql -d postgres -c "alter user postre with superuser;" \
-      #       psql -d postgres -c "create database test;" \
-      #       psql -d postgres -c "grant all privileges on database test to postre;"
       - run:
           name: Run tests
           command: |
             npm run test
-      #Send coverage report to Codecov
-      - run: yarn start reportCoverage
-      - store_artifacts:
-          path: ./coverage/clover.xml
-          prefix: tests
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
-      - store_test_results:
-          path: ./coverage/clover.xml  
