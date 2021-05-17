@@ -14,7 +14,7 @@ module.exports = async () => {
   });
   try {
     await mainSequelize.authenticate()
-    await mainSequelize.query("DROP DATABASE test");
+    await mainSequelize.query("DROP DATABASE IF EXISTS test");
     await mainSequelize.query("CREATE DATABASE test");
     await mainSequelize.close();
     const currentDatabase = process.env.DATABASE_DSN.split('/');
