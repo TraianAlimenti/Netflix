@@ -4,7 +4,8 @@ workflows:
   version: 2
   build:
     jobs:
-      - build
+      - build:
+          context: Netflix
 
 jobs:
   build:
@@ -15,12 +16,20 @@ jobs:
       auth:
         username: traian07 
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      environment:
+        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        POSTGRES_DB: $POSTGRES_DB
     #Secondary container image on common network.
     - image: circleci/postgres:9.6.2-alpine
       auth:
         username: traian07 
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-    
+      environment:
+        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        POSTGRES_DB: $POSTGRES_DB
+
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
