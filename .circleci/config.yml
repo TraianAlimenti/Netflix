@@ -21,9 +21,9 @@ jobs:
         username: traian07 
         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
       environment:
-        POSTGRES_USER: $POSTGRES_USER
+        POSTGRES_USER: postre
         POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-        POSTGRES_DB: $POSTGRES_DB
+        POSTGRES_DB: netflix
     
     steps:
       - checkout
